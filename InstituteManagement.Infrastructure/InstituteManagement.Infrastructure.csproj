@@ -20,4 +20,8 @@
     <ProjectReference Include="..\InstituteManagement.Core\InstituteManagement.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Configurations\" />
+  </ItemGroup>
+
 </Project>
