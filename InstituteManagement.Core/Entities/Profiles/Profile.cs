@@ -30,11 +30,13 @@ namespace InstituteManagement.Core.Entities.Profiles
 
         public string? Bio { get; set; }
 
-        public List<PhoneNumber> Phones { get; set; } = new();
+        public List<PhoneNumber> Phones { get; set; } = [];
 
-        public List<SocialLink> SocialLinks { get; set; } = new();
+        public List<SocialLink> SocialLinks { get; set; } = [];
 
-        public List<Address> Addresses { get; set; } = new();
+        public List<EmailAddress> EmailAddresses { get; set; } = [];
+
+        public List<Address> Addresses { get; set; } = [];
 
         public bool IsVerified { get; set; }
 

@@ -14,16 +14,10 @@ namespace InstituteManagement.Core.Entities.Profiles
         public Guid? OwnerOrgProfileId { get; set; }
         public OrgProfile? OwnerOrgProfile { get; set; }
         public string? Description { get; set; }
-        public ICollection<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
-        public ICollection<EmailAddress> EmailAddresses { get; set; } = new List<EmailAddress>();
-
-        public Address? Address { get; set; }
-
         public string? ProfileCoverPhotoUrl { get; set; }
-
         // Relationships
-        public List<TeacherProfile> Teachers { get; set; } = new();
-        public List<StudentProfile> Members { get; set; } = new();
+        public List<TeacherProfile> Teachers { get; set; } = [];
+        public List<StudentProfile> Members { get; set; } = [];
     }
 
 }

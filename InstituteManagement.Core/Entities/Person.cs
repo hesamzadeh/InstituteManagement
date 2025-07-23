@@ -41,9 +41,9 @@ namespace InstituteManagement.Core.Entities
 
         public bool IsVerified { get; set; } = false;
 
-        public List<string> Badges { get; set; } = new();
+        public List<string> Badges { get; set; } = [];
 
-        public List<string> SocialLinks { get; set; } = new();
+        public List<SocialLink> SocialLinks { get; set; } = [];
 
         public string PasswordHash { get; set; } = default!;
 
