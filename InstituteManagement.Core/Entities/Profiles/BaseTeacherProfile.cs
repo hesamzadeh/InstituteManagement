@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace InstituteManagement.Core.Entities.Profiles
 {
-    public class StudentProfile : Profile
+    public class BaseTeacherProfile : BaseProfile
     {
-        public List<OrgProfile> EnrolledOrganizations { get; set; } = [];
+        public bool IsIndependent { get; set; }
+        public List<BaseOrgProfile> AssociatedOrganizations { get; set; } = [];
     }
 
 }

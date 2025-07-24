@@ -45,12 +45,13 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 a.ToTable("PersonPhoneNumbers"); // Optional: separate table
             });
 
+
             builder.OwnsMany(p => p.SocialLinks, a =>
             {
                 a.WithOwner().HasForeignKey("PersonId");
                 a.Property(p => p.Platform).HasMaxLength(20);
                 a.Property(p => p.Url).HasMaxLength(100);
-                a.ToTable("PersonPhoneNumbers"); // Optional: separate table
+                a.ToTable("PersonSocialLinks"); // Optional: separate table
             });
         }
     }

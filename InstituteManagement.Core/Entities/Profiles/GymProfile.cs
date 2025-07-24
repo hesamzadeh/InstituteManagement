@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InstituteManagement.Core.Entities.Profiles
 {
-    public class GymProfile : OrgProfile
+    public class GymProfile : BaseOrgProfile
     {
         // Add gym-specific properties here
     }

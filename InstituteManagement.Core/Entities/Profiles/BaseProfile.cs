@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InstituteManagement.Core.Entities.Profiles
 {
-    public abstract class Profile : BaseEntity
+    public abstract class BaseProfile : BaseEntity
     {
         [Required]
         public Guid PersonId { get; set; }
@@ -29,14 +29,6 @@ namespace InstituteManagement.Core.Entities.Profiles
         public string? NationalCode { get; set; }
 
         public string? Bio { get; set; }
-
-        public List<PhoneNumber> Phones { get; set; } = [];
-
-        public List<SocialLink> SocialLinks { get; set; } = [];
-
-        public List<EmailAddress> EmailAddresses { get; set; } = [];
-
-        public List<Address> Addresses { get; set; } = [];
 
         public bool IsVerified { get; set; }
 

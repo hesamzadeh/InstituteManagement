@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace InstituteManagement.Infrastructure.Data.Configurations
 {
-    public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
+    public class ProfileConfiguration : IEntityTypeConfiguration<BaseProfile>
     {
-        public void Configure(EntityTypeBuilder<Profile> builder)
+        public void Configure(EntityTypeBuilder<BaseProfile> builder)
         {
             builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Type).IsRequired();
 
             builder.HasDiscriminator(p => p.Type)
-                   .HasValue<OrgProfile>(ProfileType.Org)
-                   .HasValue<StudentProfile>(ProfileType.Student)
-                   .HasValue<TeacherProfile>(ProfileType.Teacher);
+                   .HasValue<BaseOrgProfile>(ProfileType.)
+                   .HasValue<BaseStudentProfile>(ProfileType.Student)
+                   .HasValue<BaseTeacherProfile>(ProfileType.Teacher);
 
             builder.Property(p => p.DisplayName).HasMaxLength(255);
             builder.Property(p => p.NationalCode).HasMaxLength(20);
@@ -43,16 +43,16 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 a.ToTable("ProfileSocialLinks");
             });
 
-            builder.OwnsMany(p => p.Addresses, a =>
+            builder.OwnsOne(p => p.Addresses, a =>
             {
-                a.WithOwner().HasForeignKey("ProfileId");
-                a.Property(p => p.Line1).HasMaxLength(200);
-                a.Property(p => p.Line2).HasMaxLength(200);
-                a.Property(p => p.City).HasMaxLength(100);
-                a.Property(p => p.Province).HasMaxLength(100);
-                a.Property(p => p.PostalCode).HasMaxLength(20);
-                a.Property(p => p.Country).HasMaxLength(100);
-                a.ToTable("ProfileAddresses");
+                a.Property(x => x.Country).HasMaxLength(100);
+                a.Property(x => x.Province).HasMaxLength(100);
+                a.Property(x => x.City).HasMaxLength(100);
+                a.Property(x => x.District).HasMaxLength(100);
+                a.Property(x => x.FullAddress).HasMaxLength(500);
+                a.Property(x => x.PostalCode).HasMaxLength(20);
+                a.Property(x => x.Latitude);
+                a.Property(x => x.Longitude);
             });
         }
     }
