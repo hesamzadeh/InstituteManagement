@@ -53,6 +53,7 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 a.Property(p => p.Url).HasMaxLength(100);
                 a.ToTable("PersonSocialLinks"); // Optional: separate table
             });
+                       
         }
     }
 }

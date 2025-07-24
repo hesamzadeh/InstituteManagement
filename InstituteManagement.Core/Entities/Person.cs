@@ -61,7 +61,7 @@ namespace InstituteManagement.Core.Entities
 
         public bool IsLocked { get; set; } = false;
         // Relationships
-        public ICollection<BaseProfile> Profiles { get; set; } = new List<BaseProfile>();
+        public ICollection<BaseProfile> Profiles { get; set; } = [];
     }
 
 }

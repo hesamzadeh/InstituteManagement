@@ -8,10 +8,13 @@ namespace InstituteManagement.Core.Entities.Enums
 {
     public enum ProfileType
     {
-        Student,
-        Teacher,
-        IndependentTeacher,
-        Organization_Gym,
-        Organization_Institute
+        Gym_Student,
+        Gym_Teacher,
+        Gym_IndependentTeacher,
+        Gym_Organization,
+        Institute_Student,
+        Institute_Teacher,
+        Institute_IndependentTeacher,
+        Institute_Organization
     }
 }
