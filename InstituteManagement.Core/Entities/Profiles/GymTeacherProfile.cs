@@ -1,4 +1,9 @@
-﻿namespace InstituteManagement.Core.Entities.Profiles
+﻿
+namespace InstituteManagement.Core.Entities.Profiles
 {
-    class GymTeacherProfile : BaseTeacherProfile { }
+    public class GymTeacherProfile : TeacherProfile
+    {
+        public bool IsIndependent { get; set; }
+        public List<GymProfile> AssociatedGyms { get; set; } = [];
+    }
 }

@@ -1,8 +1,8 @@
-﻿namespace InstituteManagement.Core.Entities.Profiles
+﻿
+namespace InstituteManagement.Core.Entities.Profiles
 {
-    internal class GymStudentProfile : BaseStudentProfile
-
-
+    public class GymStudentProfile : StudentProfile
     {
+        public List<GymProfile> EnrolledGyms { get; set; } = [];
     }
 }

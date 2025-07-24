@@ -20,7 +20,6 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
             builder.Property(p => p.PrimaryPhone).HasMaxLength(20);
             builder.Property(p => p.PrimaryAddress).HasMaxLength(500);
             builder.Property(p => p.PublicName).HasMaxLength(100);
-            builder.Property(p => p.Email).HasMaxLength(255);
             builder.Property(p => p.PasswordHash).IsRequired();
 
             builder.Property(p => p.SignupDate).HasDefaultValueSql("getutcdate()");
@@ -53,7 +52,14 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 a.Property(p => p.Url).HasMaxLength(100);
                 a.ToTable("PersonSocialLinks"); // Optional: separate table
             });
-                       
+
+            builder.OwnsOne(p => p.Email, email =>
+            {
+                email.Property(e => e.Value)
+                     .HasColumnName("Email")
+                     .HasMaxLength(255)
+                     .IsRequired();
+            });
         }
     }
 }

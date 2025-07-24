@@ -1,19 +1,11 @@
 ﻿using InstituteManagement.Core.Common;
-using InstituteManagement.Core.Common.ValueObjects;
 using InstituteManagement.Core.Entities.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net;
-using System.Numerics;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace InstituteManagement.Core.Entities.Profiles
 {
-    public abstract class BaseProfile : BaseEntity
+    public abstract class Profile : BaseEntity
     {
         [Required]
         public Guid PersonId { get; set; }

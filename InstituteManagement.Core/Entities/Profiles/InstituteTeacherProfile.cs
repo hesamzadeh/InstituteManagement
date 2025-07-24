@@ -1,6 +1,9 @@
-﻿namespace InstituteManagement.Core.Entities.Profiles
+﻿
+namespace InstituteManagement.Core.Entities.Profiles
 {
-    class InstituteTeacherProfile : BaseTeacherProfile
-    { }
-
+    public class InstituteTeacherProfile : TeacherProfile
+    {
+        public bool IsIndependent { get; set; }
+        public List<InstituteProfile> AssociatedInstitutes { get; set; } = [];
+    }
 }
