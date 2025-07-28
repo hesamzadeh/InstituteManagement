@@ -1,3 +1,4 @@
+using InstituteManagement.API.Seed;
 using InstituteManagement.Application; // namespace where your handlers live
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Infrastructure;
@@ -31,6 +32,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
 
+builder.Services.AddScoped<IAppDbContext, AppDbContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,8 +41,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 
 app.UseAuthorization();
 
@@ -50,5 +51,11 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Institute API v1");
 });
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DataSeeder.SeedSampleData(context);
+}
 
 app.Run();

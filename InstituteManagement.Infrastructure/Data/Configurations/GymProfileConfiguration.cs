@@ -23,7 +23,7 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                      .HasMaxLength(100)
                      .IsRequired();
                 email.WithOwner().HasForeignKey("GymProfileId");
-                email.ToTable("GymProfileEmails");
+                email.ToTable("GymProfile_Emails");
             });
 
             builder.OwnsMany(p => p.Phones, a =>

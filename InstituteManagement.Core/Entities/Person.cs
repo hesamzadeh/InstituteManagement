@@ -7,13 +7,16 @@ namespace InstituteManagement.Core.Entities
 {
     public class Person : BaseEntity
     {
+        // FK to AspNetUsers.Id (AppUser)
+        public string? UserId { get; set; }
+
         [Required]
         [MaxLength(20)]
-        public string SSID { get; set; } = default!;
+        public string NationalCode { get; set; } = default!;
 
         [Required]
         [MaxLength(100)]
-        public string GivenName { get; set; } = default!;
+        public string FirstName { get; set; } = default!;
 
         [Required]
         [MaxLength(100)]
@@ -44,8 +47,6 @@ namespace InstituteManagement.Core.Entities
         public List<string> Badges { get; set; } = [];
 
         public List<SocialLink> SocialLinks { get; set; } = [];
-
-        public string PasswordHash { get; set; } = default!;
 
         public DateTime? LastPasswordChange { get; set; }
 

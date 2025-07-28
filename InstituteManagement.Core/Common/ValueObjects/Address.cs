@@ -17,7 +17,7 @@ namespace InstituteManagement.Core.Common.ValueObjects
         public string? District { get; set; }
 
         [MaxLength(500)]
-        public string? FullAddress { get; set; }
+        public string FullAddress { get; set; } = string.Empty;
 
         [MaxLength(20)]
         public string? PostalCode { get; set; }
