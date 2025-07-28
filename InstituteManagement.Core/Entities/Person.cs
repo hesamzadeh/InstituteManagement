@@ -8,7 +8,7 @@ namespace InstituteManagement.Core.Entities
     public class Person : BaseEntity
     {
         // FK to AspNetUsers.Id (AppUser)
-        public string? UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         [Required]
         [MaxLength(20)]
