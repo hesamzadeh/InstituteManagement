@@ -3,6 +3,7 @@ using InstituteManagement.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace InstituteManagement.Infrastructure.Data.Configurations
 {
@@ -12,17 +13,15 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
         {
             builder.HasKey(p => p.Id);
 
-            builder.HasIndex(p => p.NationalCode).IsUnique();
-            //builder.Property(p => p.UserId).HasMaxLength(450);
-            builder.Property(p => p.NationalCode).HasMaxLength(20).IsRequired();
+            builder.HasIndex(p => p.NationalId).IsUnique();
+            //builder.Property(p => p.AppUserId).HasMaxLength(450);
+            builder.Property(p => p.NationalId).HasMaxLength(20).IsRequired();
             builder.Property(p => p.FirstName).HasMaxLength(100).IsRequired();
             builder.Property(p => p.LastName).HasMaxLength(100).IsRequired();
-            builder.Property(p => p.FathersName).HasMaxLength(100);
-            builder.Property(p => p.PrimaryPhone).HasMaxLength(20);
-            builder.Property(p => p.PublicName).HasMaxLength(100);
 
             builder.Property(p => p.SignupDate).HasDefaultValueSql("getutcdate()");
             builder.Property(p => p.TimeZone).HasDefaultValue("UTC");
+            builder.Property(p => p.NationalityCode).HasConversion<string>();
 
             builder.HasMany(p => p.Profiles)
                    .WithOne(p => p.Person)
@@ -58,13 +57,6 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 a.ToTable("PersonSocialLinks"); // Optional: separate table
             });
 
-            builder.OwnsOne(p => p.Email, email =>
-            {
-                email.Property(e => e.Value)
-                     .HasColumnName("Email")
-                     .IsRequired();
-            });
-
             // Owned Type: PrimaryAddress
             builder.OwnsOne(p => p.PrimaryAddress, address =>
             {
@@ -98,14 +90,6 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 address.Property(a => a.Longitude)
                        .HasColumnName("Longitude");
             });
-
-            builder.Property(p => p.PrimaryPhone)
-             .HasConversion(
-                 v => v == null ? null : v.ToString(), // to database
-                 v => string.IsNullOrWhiteSpace(v) ? null : PhoneNumber.Create(v, null) // from database
-             )
-             .HasMaxLength(50)
-             .HasColumnName("PrimaryPhone");
         }
     }
 }

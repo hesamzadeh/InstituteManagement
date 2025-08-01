@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +20,7 @@
     <ProjectReference Include="..\InstituteManagement.Application\InstituteManagement.Application.csproj" />
     <ProjectReference Include="..\InstituteManagement.Core\InstituteManagement.Core.csproj" />
     <ProjectReference Include="..\InstituteManagement.Infrastructure\InstituteManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\InstituteManagement.Shared\InstituteManagement.Shared.csproj" />
   </ItemGroup>
 
 </Project>

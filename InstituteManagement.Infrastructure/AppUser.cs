@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace InstituteManagement.Infrastructure.Identity
+namespace InstituteManagement.Infrastructure
 {
     public class AppUser : IdentityUser<Guid>
     {

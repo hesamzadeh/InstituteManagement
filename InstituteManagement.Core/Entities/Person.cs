@@ -8,11 +8,13 @@ namespace InstituteManagement.Core.Entities
     public class Person : BaseEntity
     {
         // FK to AspNetUsers.Id (AppUser)
-        public Guid? UserId { get; set; }
+        public Guid? AppUserId { get; set; }
 
         [Required]
         [MaxLength(20)]
-        public string NationalCode { get; set; } = default!;
+        public string NationalId { get; set; } = default!;
+        [Required]
+        public NationalityCode NationalityCode { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -24,21 +26,10 @@ namespace InstituteManagement.Core.Entities
 
         public DateOnly? Birthday { get; set; }
 
-        [MaxLength(100)]
-        public string? FathersName { get; set; }
-
-        public PhoneNumber? PrimaryPhone { get; set; }
-
         public List<PhoneNumber> OtherPhones { get; set; } = [];
 
         [MaxLength(500)]
         public Address? PrimaryAddress { get; set; }
-
-        [MaxLength(100)]
-        public string? PublicName { get; set; }
-
-        [EmailAddress]
-        public EmailAddress? Email { get; set; }
 
         public DateTime SignupDate { get; set; } = DateTime.UtcNow;
 
@@ -47,8 +38,6 @@ namespace InstituteManagement.Core.Entities
         public List<string> Badges { get; set; } = [];
 
         public List<SocialLink> SocialLinks { get; set; } = [];
-
-        public DateTime? LastPasswordChange { get; set; }
 
         public DateTime? LastLoginTime { get; set; }
 

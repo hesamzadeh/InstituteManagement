@@ -15,35 +15,35 @@ namespace InstituteManagement.API.Seed
             {
                 new Person
                 {
-                    NationalCode = "0011223344",
+                    NationalId = "0011223344",
                     FirstName = "Alice",
                     LastName = "Doe",
                     Birthday = new DateOnly(1990, 1, 1)
                 },
                 new Person
                 {
-                    NationalCode = "0022334455",
+                    NationalId = "0022334455",
                     FirstName = "Bob",
                     LastName = "Smith",
                     Birthday = new DateOnly(1985, 5, 10)
                 },
                 new Person
                 {
-                    NationalCode = "0033445566",
+                    NationalId = "0033445566",
                     FirstName = "Charlie",
                     LastName = "Brown",
                     Birthday = new DateOnly(2000, 3, 15)
                 },
                 new Person
                 {
-                    NationalCode = "0044556677",
+                    NationalId = "0044556677",
                     FirstName = "Dana",
                     LastName = "White",
                     Birthday = new DateOnly(1995, 8, 25)
                 },
                 new Person
                 {
-                    NationalCode = "0055667788",
+                    NationalId = "0055667788",
                     FirstName = "Eve",
                     LastName = "Black",
                     Birthday = new DateOnly(1992, 11, 30)

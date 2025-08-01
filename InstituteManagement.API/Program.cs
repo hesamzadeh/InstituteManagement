@@ -1,10 +1,11 @@
+using InstituteManagement.API.Mappings;
 using InstituteManagement.API.Seed;
 using InstituteManagement.Application; // namespace where your handlers live
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Infrastructure;
-using InstituteManagement.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,10 +30,25 @@ builder.Services.AddSwaggerGen(c => {
 builder.Services.AddAuthentication();   
 builder.Services.AddAuthorization();
 
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
+//builder.Services.AddMediatR(cfg =>
+//    cfg.RegisterServicesFromAssembly(typeof(AutoMapperProfile).Assembly));
 
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// Add localization services
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "fa" };
+    options.SetDefaultCulture("fa")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
+
+    options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
+});
 
 var app = builder.Build();
 
@@ -52,10 +68,6 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Institute API v1");
 });
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//    await DataSeeder.SeedSampleData(context);
-//}
+app.UseRequestLocalization(); // <- This enables Accept-Language support
 
 app.Run();

@@ -1,5 +1,5 @@
 ﻿using InstituteManagement.Core.Common;
-using InstituteManagement.Core.Entities.Enums;
+using InstituteManagement.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
