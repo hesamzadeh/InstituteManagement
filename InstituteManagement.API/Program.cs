@@ -1,12 +1,11 @@
 using InstituteManagement.API.Mappings;
-using InstituteManagement.API.Seed;
-using InstituteManagement.Application; // namespace where your handlers live
+using InstituteManagement.API.Services;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Infrastructure;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -49,6 +48,9 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
     options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
 });
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ICaptchaValidator, GoogleRecaptchaValidator>();
 
 var app = builder.Build();
 

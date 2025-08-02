@@ -15,6 +15,13 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3"></script>
+    <script>
+        window.getRecaptchaToken = function () {
+            return grecaptcha.execute('6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3', { action: 'submit' });
+        };
+    </script>
 </body>
 
 </html>

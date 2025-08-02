@@ -9,5 +9,6 @@
         public string NationalId { get; set; } = default!;
         public DateOnly Birthday { get; set; } = default!;
         public string Email { get; set; } = default!;
+        public string RecaptchaToken { get; set; }
     }
 }

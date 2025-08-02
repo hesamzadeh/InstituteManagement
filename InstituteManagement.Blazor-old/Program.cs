@@ -1,5 +1,7 @@
 using InstituteManagement.Blazor.Components;
 using InstituteManagement.Blazor.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,12 @@ builder.Services.AddScoped(sp =>
 });
 
 builder.Services.AddScoped<PersonApiService>();
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents(options =>
+    {
+        options.RootComponentsInteractiveRenderMode = RenderMode.InteractiveServer;
+    });
 
 var app = builder.Build();
 

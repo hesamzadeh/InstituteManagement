@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InstituteManagement.API.Services;
 using InstituteManagement.Application.Common;
 using InstituteManagement.Core.Entities;
 using InstituteManagement.Infrastructure;
@@ -19,22 +20,35 @@ namespace InstituteManagement.API.Controllers
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
         private readonly IStringLocalizer<SharedResources> _localizer;
+        private readonly ICaptchaValidator _captchaValidator;
 
         public SignupController(
             UserManager<AppUser> userManager,
             IMapper mapper,
             AppDbContext appDbContext,
-            IStringLocalizer<SharedResources> localizer)
+            IStringLocalizer<SharedResources> localizer,
+            ICaptchaValidator captchaValidator)
         {
             _userManager = userManager;
             _mapper = mapper;
             _appDbContext = appDbContext;
             _localizer = localizer;
+            _captchaValidator = captchaValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> Signup(SignupDto dto)
         {
+            if (dto.RecaptchaToken == "dev-mode")
+            {
+                // Accept it without verification
+            }
+            else
+            {
+                if (!await _captchaValidator.IsCaptchaValid(dto.RecaptchaToken, "submit"))
+                    return BadRequest(new { Message = _localizer["CaptchaFailed"] });
+            }
+
             if (dto.NationalityCode == NationalityCode.IR &&
                 !NationalIdValidator.IsValidIranianCodeMeli(dto.NationalId))
             {
