@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using InstituteManagement.Core.Entities;
-using InstituteManagement.Shared.DTOs.Persons;
 using InstituteManagement.Shared.DTOs.Signup;
 
 namespace InstituteManagement.API.Mappings
@@ -9,8 +8,6 @@ namespace InstituteManagement.API.Mappings
     {
         public AutoMapperProfile()
         {
-            CreateMap<Person, PersonDto>().ReverseMap();
-            CreateMap<Person, CreatePersonDto>().ReverseMap();
             CreateMap<SignupDto, Person>()
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday))
                 .ForMember(dest => dest.SignupDate, opt => opt.MapFrom(_ => DateTime.UtcNow))

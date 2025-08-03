@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InstituteManagement.Application.Common
+namespace InstituteManagement.Shared
 {
     public static class EnumExtensions
     {

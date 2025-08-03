@@ -118,21 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Signup.InvalidNationalId" xml:space="preserve">
-    <value>Invalid national ID.</value>
+    <value>The provided National ID is invalid.</value>
   </data>
   <data name="Signup.UserNameAlreadyExists" xml:space="preserve">
-    <value>An account already exists.</value>
+    <value>This username is already taken.</value>
   </data>
   <data name="Signup.PersonSaveError" xml:space="preserve">
     <value>Error saving person data.</value>
   </data>
   <data name="Signup.UserCreationFailed" xml:space="preserve">
-    <value>User creation failed.</value>
+    <value>Failed to create user account.</value>
   </data>
   <data name="Signup.SignupSuccess" xml:space="preserve">
-    <value>Signup successful.</value>
+    <value>Signup completed successfully.</value>
   </data>
   <data name="Signup.NationalIdAlreadyExists" xml:space="preserve">
-    <value>National ID already exists.</value>
+    <value>A person with this National ID already exists.</value>
+  </data>
+  <data name="Signup.CaptchaFailed" xml:space="preserve">
+    <value>CAPTCHA verification failed.</value>
+  </data>
+  <data name="Signup.UnexpectedError" xml:space="preserve">
+    <value>An unexpected error occurred.</value>
   </data>
 </root>

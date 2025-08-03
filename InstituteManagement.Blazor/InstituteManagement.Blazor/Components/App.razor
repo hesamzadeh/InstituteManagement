@@ -15,24 +15,9 @@
 <body>
     <component type="typeof(App)" render-mode="InteractiveServer" />
     <Routes />
-    <script src="_framework/blazor.web.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3"></script>
-    <script>
-        window.getRecaptchaToken = function () {
-            return new Promise((resolve, reject) => {
-                if (typeof grecaptcha !== 'undefined') {
-                    grecaptcha.ready(function () {
-                        grecaptcha.execute('6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3', { action: 'submit' })
-                            .then(resolve)
-                            .catch(reject);
-                    });
-                } else {
-                    reject("grecaptcha not loaded");
-                }
-            });
-        };
-    </script>
-
+    <script src="_framework/blazor.web.js"></script>   
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 
 </html>

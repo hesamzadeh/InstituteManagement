@@ -7,6 +7,7 @@ using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.Signup;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
@@ -14,7 +15,7 @@ namespace InstituteManagement.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SignupController : ControllerBase
+    public class SignupController : AppControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
@@ -36,66 +37,65 @@ namespace InstituteManagement.API.Controllers
             _captchaValidator = captchaValidator;
         }
 
+        [HttpGet("check-username")]
+        public async Task<IActionResult> CheckUsername([FromQuery] string username)
+        {
+            var isAvailable = await _userManager.FindByNameAsync(username) == null;
+            return Ok(isAvailable);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Signup(SignupDto dto)
         {
-            if (dto.RecaptchaToken == "dev-mode")
+            // CAPTCHA verification
+            if (dto.RecaptchaToken != "dev-mode")
             {
-                // Accept it without verification
-            }
-            else
-            {
-                if (!await _captchaValidator.IsCaptchaValid(dto.RecaptchaToken, "submit"))
-                    return BadRequest(new { Message = _localizer["CaptchaFailed"] });
+                var captchaOk = await _captchaValidator.IsCaptchaValid(dto.RecaptchaToken, "submit");
+                if (!captchaOk)
+                {
+                    return ValidationError(nameof(dto.RecaptchaToken), _localizer["Signup.CaptchaFailed"]);
+                }
             }
 
+            // National ID validation
             if (dto.NationalityCode == NationalityCode.IR &&
                 !NationalIdValidator.IsValidIranianCodeMeli(dto.NationalId))
             {
-                return BadRequest(new { Message = _localizer["Signup.InvalidNationalId"] });
+                return ValidationError(nameof(dto.NationalId), _localizer["Signup.InvalidNationalId"]);
             }
 
-            // Check for duplicate NationalId
+            // Duplicate National ID
             try
             {
                 var existingPerson = await _appDbContext.People
-               .AsNoTracking()
-               .FirstOrDefaultAsync(p => p.NationalityCode == dto.NationalityCode && p.NationalId == dto.NationalId);
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.NationalityCode == dto.NationalityCode && p.NationalId == dto.NationalId);
 
                 if (existingPerson != null)
                 {
-                    return Conflict(new
-                    {
-                        Field = nameof(dto.NationalId),
-                        Message = _localizer["Signup.NationalIdAlreadyExists"],
-                    });
+                    return ValidationError(nameof(dto.NationalId), _localizer["Signup.NationalIdAlreadyExists"]);
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    Message = _localizer["UnexpectedError"],
-                    Error = ex.Message
-                });
+                return Problem(
+                    detail: ex.Message,
+                    title: _localizer["Signup.UnexpectedError"],
+                    statusCode: 500
+                );
             }
 
-
-
-            // Check for duplicate UserName
+            // Duplicate Username
             var existingUser = await _appDbContext.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UserName == dto.UserName);
 
             if (existingUser != null)
             {
-                return Conflict(new
-                {
-                    Field = nameof(dto.UserName),
-                    Message = _localizer["Signup.UserNameAlreadyExists"]
-                });
+                return ValidationError(nameof(dto.UserName), _localizer["Signup.UserNameAlreadyExists"]);
             }
 
+            // Create Person and User
             var password = GenerateRandomPassword(8);
 
             var person = new Person
@@ -117,19 +117,19 @@ namespace InstituteManagement.API.Controllers
             }
             catch (DbUpdateException dbEx)
             {
-                return BadRequest(new
-                {
-                    Message = _localizer["Signup.PersonSaveError"],
-                    Error = dbEx.InnerException?.Message ?? dbEx.Message
-                });
+                return Problem(
+                    detail: dbEx.InnerException?.Message ?? dbEx.Message,
+                    title: _localizer["Signup.PersonSaveError"],
+                    statusCode: 400
+                );
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    Message = _localizer["UnexpectedError"],
-                    Error = ex.Message
-                });
+                return Problem(
+                    detail: ex.Message,
+                    title: _localizer["Signup.UnexpectedError"],
+                    statusCode: 500
+                );
             }
 
             var user = new AppUser
@@ -144,11 +144,12 @@ namespace InstituteManagement.API.Controllers
             var createResult = await _userManager.CreateAsync(user, password);
             if (!createResult.Succeeded)
             {
-                return BadRequest(new
+                var modelState = new ModelStateDictionary();
+                foreach (var error in createResult.Errors)
                 {
-                    Message = _localizer["Signup.UserCreationFailed"],
-                    Errors = createResult.Errors
-                });
+                    modelState.AddModelError(string.Empty, error.Description);
+                }
+                return ValidationProblem(modelState);
             }
 
             person.AppUserId = user.Id;

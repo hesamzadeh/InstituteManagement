@@ -135,4 +135,10 @@
   <data name="Signup.NationalIdAlreadyExists" xml:space="preserve">
     <value>قبلاً با این کد ملی ثبت‌نام شده است. </value>
   </data>
+  <data name="Signup.CaptchaFailed" xml:space="preserve">
+    <value>تأیید CAPTCHA ناموفق بود.</value>
+  </data>
+  <data name="Signup.UnexpectedError" xml:space="preserve">
+    <value>An unexpected error occurred.</value>
+  </data>
 </root>

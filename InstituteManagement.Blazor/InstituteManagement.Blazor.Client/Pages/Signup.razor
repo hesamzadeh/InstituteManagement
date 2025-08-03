@@ -1,144 +1,109 @@
 ﻿@page "/signup"
+@using InstituteManagement.Shared
 @rendermode InteractiveServer
-@inject HttpClient Http
-@inject IJSRuntime JS
-@using InstituteManagement.Shared.DTOs.Signup
+@inherits SignupBase
 
-<h3>Signup</h3>
-<EditForm EditContext="@editContext" OnValidSubmit="HandleSignup" FormName="SignupForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <InputText @bind-Value="signup.FirstName" placeholder="First Name" class="form-control" />
-    <ValidationMessage For="@(() => signup.FirstName)" />
-
-    <InputText @bind-Value="signup.LastName" placeholder="Last Name" class="form-control" />
-    <ValidationMessage For="@(() => signup.LastName)" />
-
-    <InputText @bind-Value="signup.NationalId" placeholder="National ID" class="form-control" />
-    <ValidationMessage For="@(() => signup.NationalId)" />
-
-    <InputDate @bind-Value="signup.Birthday" class="form-control" />
-    <ValidationMessage For="@(() => signup.Birthday)" />
-
-    <InputText @bind-Value="signup.UserName" placeholder="Username" class="form-control" />
-    <ValidationMessage For="@(() => signup.UserName)" />
-
-    <InputText @bind-Value="signup.Email" placeholder="Email" class="form-control" />
-    <ValidationMessage For="@(() => signup.Email)" />
-
-    <button type="submit" class="btn btn-primary">Sign Up</button>
-</EditForm>
-
-@if (!string.IsNullOrEmpty(responseMessage))
-{
-    <div class="mt-3 alert alert-info">@responseMessage</div>
-}
-@* @code {
-    private SignupDto signup = new();
-    private bool _jsReady = false;
-    private string responseMessage;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _jsReady = true;
-            StateHasChanged();
-        }
-    }
-
-    private async Task HandleSignup()
-    {
-        if (!_jsReady)
-        {
-            Console.WriteLine("JS runtime is not yet ready.");
-            //return;
-        }
-
-        try
-        {
-            var token = await JS.InvokeAsync<string>("getRecaptchaToken");
-            signup.RecaptchaToken = token;
-
-            // Call your backend API
-            var response = await Http.PostAsJsonAsync("api/signup", signup);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<object>();
-                responseMessage = "Signup successful!";
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                responseMessage = $"Signup failed: {error}";
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine(ex.Message);
-        }
-    }
-} *@
-@code {
-    private SignupDto signup = new();
-    private bool _jsReady = false;
-    private EditContext editContext;
-    private ValidationMessageStore messageStore;
-    private string responseMessage;
-
-    protected override void OnInitialized()
-    {
-        editContext = new EditContext(signup);
-        messageStore = new ValidationMessageStore(editContext);
-    }
-
-    private async Task HandleSignup()
-    {
-        if (!_jsReady) return;
-
-        try
-        {
-            var token = await JS.InvokeAsync<string>("getRecaptchaToken");
-            signup.RecaptchaToken = token;
-
-            // Clear previous messages
-            messageStore.Clear();
-            editContext.NotifyValidationStateChanged();
-
-            var response = await Http.PostAsJsonAsync("api/signup", signup);
-
-            if (response.IsSuccessStatusCode)
-            {
-                responseMessage = "Signup successful!";
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                var errorData = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-                if (errorData?.Errors != null)
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow rounded-4 p-4">
+                <h3 class="mb-4 text-center">Sign Up</h3>
+                @if (!SignupSuccess)
                 {
-                    foreach (var kv in errorData.Errors)
-                    {
-                        messageStore.Add(editContext.Field(kv.Key), kv.Value);
-                    }
 
-                    editContext.NotifyValidationStateChanged();
+                    <EditForm EditContext="@editContext" FormName="SignupForm" OnValidSubmit="HandleSignup">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <!-- First Name -->
+                        <div class="mb-3">
+                            <InputText @bind-Value="signup.FirstName" placeholder="First Name" class="form-control" />
+                            <ValidationMessage For="@(() => signup.FirstName)" />
+                        </div>
+                        <!-- Last Name -->
+                        <div class="mb-3">
+                            <InputText @bind-Value="signup.LastName" placeholder="Last Name" class="form-control" />
+                            <ValidationMessage For="@(() => signup.LastName)" />
+                        </div>
+                        <!-- UserName -->
+                        <div class="mb-3">
+                            <InputText @bind-Value="signup.UserName" placeholder="UserName"
+                                       class="form-control" @oninput="CheckUsername" />
+                            <ValidationMessage For="@(() => signup.UserName)" />
+                            @if (!string.IsNullOrEmpty(usernameStatus))
+                            {
+                                <div class="text-muted small">@usernameStatus</div>
+                            }
+                        </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <InputText @bind-Value="signup.Email" placeholder="Email" class="form-control" />
+                            <ValidationMessage For="@(() => signup.Email)" />
+                        </div>
+                        <!-- Nationality Code -->
+                        <div class="mb-3">
+                            <InputSelect @bind-Value="signup.NationalityCode" placeholder="Nationality" class="form-control">
+                                <option value="">-- Select Nationality --</option>
+                                @foreach (var nat in NationalityOptions)
+                                {
+                                    <option value="@nat">@nat.GetDisplayName()</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => signup.NationalityCode)" />
+                        </div>
+                        <!-- National ID -->
+                        <div class="mb-3">
+                            <InputText @bind-Value="signup.NationalId" placeholder="National ID" class="form-control" />
+                            <ValidationMessage For="@(() => signup.NationalId)" />
+                        </div>
+                        <!-- Birthdate -->
+                        <div class="mb-3">
+                            <label class="form-label">Birthdate</label>
+                            <InputText id="birthdate" @bind-Value="formattedBirthDate" class="form-control" />
+                            <ValidationMessage For="@(() => signup.Birthday)" />
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">Submitting...</span>
+
+                                }
+                                else
+                                {
+                                    <span>Sign Up</span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
                 }
-                else
+                @if (!string.IsNullOrEmpty(responseMessage))
                 {
-                    responseMessage = "Signup failed with unknown error.";
+                    <div class="mt-3 alert alert-info">@responseMessage</div>
                 }
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- your recaptcha scripts here... -->
+<script>
+    window.getRecaptchaToken = function () {
+        return new Promise((resolve, reject) => {
+            if (typeof grecaptcha !== 'undefined') {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3', { action: 'submit' })
+                        .then(resolve)
+                        .catch(reject);
+                });
+            } else {
+                reject("grecaptcha not loaded");
             }
-            else
-            {
-                responseMessage = "Signup failed due to server error.";
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine(ex.Message);
-            responseMessage = "An unexpected error occurred.";
-        }
-    }
-}
+        });
+    };
+</script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3"></script>
