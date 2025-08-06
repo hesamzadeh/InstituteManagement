@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstituteManagement.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstituteManagement.Shared", "InstituteManagement.Shared\InstituteManagement.Shared.csproj", "{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstituteManagement.Blazor", "InstituteManagement.Blazor\InstituteManagement.Blazor.csproj", "{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

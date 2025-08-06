@@ -117,28 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Signup.InvalidNationalId" xml:space="preserve">
-    <value>کد ملی نامعتبر است.</value>
-  </data>
-  <data name="Signup.UserNameAlreadyExists" xml:space="preserve">
-    <value>قبلاً با این نام کاربری ثبت‌نام شده است. </value>
-  </data>
-  <data name="Signup.PersonSaveError" xml:space="preserve">
-    <value>خطا در ذخیره‌سازی اطلاعات فردی. </value>
-  </data>
-  <data name="Signup.UserCreationFailed" xml:space="preserve">
-    <value>ایجاد حساب کاربری با خطا مواجه شد.</value>
-  </data>
-  <data name="Signup.SignupSuccess" xml:space="preserve">
-    <value>ثبت‌نام با موفقیت انجام شد.</value>
-  </data>
-  <data name="Signup.NationalIdAlreadyExists" xml:space="preserve">
-    <value>قبلاً با این کد ملی ثبت‌نام شده است. </value>
+  <data name="Signup.BirthdayMustBeInPast" xml:space="preserve">
+    <value>Birthday must be in the past.</value>
   </data>
   <data name="Signup.CaptchaFailed" xml:space="preserve">
-    <value>تأیید CAPTCHA ناموفق بود.</value>
+    <value>reCAPTCHA verification failed.</value>
+  </data>
+  <data name="Signup.EmailFormatInvalid" xml:space="preserve">
+    <value>Email format is invalid.</value>
+  </data>
+  <data name="Signup.EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="Signup.FirstNameMaxLength" xml:space="preserve">
+    <value>First name must be at most 50 characters.</value>
+  </data>
+  <data name="Signup.FirstNameRequired" xml:space="preserve">
+    <value>First name is required.</value>
+  </data>
+  <data name="Signup.InvalidNationalId" xml:space="preserve">
+    <value>National ID is invalid.</value>
+  </data>
+  <data name="Signup.LastNameMaxLength" xml:space="preserve">
+    <value>Last name must be at most 50 characters.</value>
+  </data>
+  <data name="Signup.LastNameRequired" xml:space="preserve">
+    <value>Last name is required.</value>
+  </data>
+  <data name="Signup.NationalIdAlreadyExists" xml:space="preserve">
+    <value>This National ID already exists.</value>
+  </data>
+  <data name="Signup.NationalIdMustBe10Digits" xml:space="preserve">
+    <value>National ID must be exactly 10 digits.</value>
+  </data>
+  <data name="Signup.NationalIdRequired" xml:space="preserve">
+    <value>National ID is required.</value>
+  </data>
+  <data name="Signup.NationalityCodeRequired" xml:space="preserve">
+    <value>Nationality code is required.</value>
+  </data>
+  <data name="Signup.PersonSaveError" xml:space="preserve">
+    <value>Could not save person data.</value>
+  </data>
+  <data name="Signup.RecaptchaTokenRequired" xml:space="preserve">
+    <value>reCAPTCHA token is required.</value>
+  </data>
+  <data name="Signup.SignupSuccess" xml:space="preserve">
+    <value>Signup completed successfully.</value>
   </data>
   <data name="Signup.UnexpectedError" xml:space="preserve">
-    <value>An unexpected error occurred.</value>
+    <value>An unexpected error occurred. Please try again.</value>
+  </data>
+  <data name="Signup.UserCreationFailed" xml:space="preserve">
+    <value>Failed to create user.</value>
+  </data>
+  <data name="Signup.UsernameAlreadyExists" xml:space="preserve">
+    <value>This username already exists.</value>
+  </data>
+  <data name="Signup.UsernameMaxLength" xml:space="preserve">
+    <value>Username must be at most 20 characters.</value>
+  </data>
+  <data name="Signup.UsernameRequired" xml:space="preserve">
+    <value>Username is required.</value>
+  </data>
+  <data name="Signup.UsernameMinLength" xml:space="preserve">
+    <value>Username must be at least 5 characters.</value>
   </data>
 </root>

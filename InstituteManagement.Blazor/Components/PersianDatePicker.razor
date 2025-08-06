@@ -1,0 +1,15 @@
+﻿@inject IJSRuntime JSRuntime
+
+<input type="text" id="@InputId" class="form-control" />
+
+@code {
+    private string InputId = $"datepicker-{Guid.NewGuid().ToString("N")}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializePersianDatePicker", $"#{InputId}");
+        }
+    }
+}

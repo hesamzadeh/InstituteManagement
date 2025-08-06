@@ -2,10 +2,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore; // <== Required for AddFluentValidationAutoValidation()
 using InstituteManagement.API.Mappings;
 using InstituteManagement.API.Services;
+using InstituteManagement.Application.Common;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Application.Validators.Auth;
 using InstituteManagement.Infrastructure;
-using InstituteManagement.Shared.DTOs.Signup;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +39,7 @@ builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 builder.Services.AddScoped<ICaptchaValidator, GoogleRecaptchaValidator>();
 
 // Localization
+//builder.Services.AddLocalization();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
