@@ -1,0 +1,96 @@
+﻿@page "/"
+@using InstituteManagement.Shared
+@using Microsoft.Extensions.Localization
+@inject NavigationManager Nav
+@inject UiLocalizer L
+@code {
+    protected override void OnInitialized()
+    {
+        // Set base name so Ui["AppIntro"] works without specifying file every time
+        // L.SetBaseName("Components.Pages.Home");
+    }
+}
+
+<PageTitle>Home</PageTitle>
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1>@L["AppTitle"]</h1>
+        <p>@L["AppIntro"]</p>
+    </div>
+
+    <div class="row">
+        <!-- Institute Management -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h3>@L["InstituteManagementTitle"]</h3>
+                    <p>@L["InstituteManagementDesc"]</p>
+
+                    <button class="btn btn-primary m-1"
+                            @onclick="@(() => GoToSignup("InstituteOwner"))">
+                        @L["RegisterAsOwner"]
+                    </button>
+
+                    <button class="btn btn-secondary m-1"
+                            @onclick="@(() => GoToSignup("InstituteTeacher"))">
+                        @L["RegisterAsIndependentTeacher"]
+                    </button>
+
+                    <button class="btn btn-outline-secondary m-1"
+                            @onclick="@(() => GoToInviteSignup("InstituteTeacher"))">
+                        @L["RegisterAsInstituteTeacher"]
+                    </button>
+
+                    <button class="btn btn-outline-primary m-1"
+                            @onclick="@(() => GoToInviteSignup("InstituteStudent"))">
+                        @L["RegisterAsStudent"]
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gym Management -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h3>@L["GymManagementTitle"]</h3>
+                    <p>@L["GymManagementDesc"]</p>
+
+                    <button class="btn btn-primary m-1"
+                            @onclick="@(() => GoToSignup("GymOwner"))">
+                        @L["RegisterAsOwner"]
+                    </button>
+
+                    <button class="btn btn-secondary m-1"
+                            @onclick="@(() => GoToSignup("GymTeacher"))">
+                        @L["RegisterAsIndependentTrainer"]
+                    </button>
+
+                    <button class="btn btn-outline-secondary m-1"
+                            @onclick="@(() => GoToInviteSignup("GymTeacher"))">
+                        @L["RegisterAsGymTrainer"]
+                    </button>
+
+                    <button class="btn btn-outline-primary m-1"
+                            @onclick="@(() => GoToInviteSignup("GymStudent"))">
+                        @L["RegisterAsMember"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void GoToSignup(string role)
+    {
+        Nav.NavigateTo($"/signup?role={role}");
+    }
+
+    private void GoToInviteSignup(string role)
+    {
+        // In a real flow, inviteToken would be provided via email or a link
+        Nav.NavigateTo($"/signup?role={role}&inviteToken=sampleToken123");
+    }
+}

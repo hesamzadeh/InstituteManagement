@@ -1,0 +1,131 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+
+@inherits InputBase<DateOnly>
+
+<input id="@Id"
+       class="@CssClass"
+       @attributes="AdditionalAttributes"
+       value="@FormatValueAsString(CurrentValue)"
+       @oninput="OnInputChanged" />
+
+@code {
+    [Parameter] public string Id { get; set; } = $"dp-{Guid.NewGuid():N}";
+    [Parameter] public string CssClass { get; set; } = "form-control";
+    [Inject] IJSRuntime JS { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (EqualityComparer<DateOnly>.Default.Equals(CurrentValue, default))
+        {
+            CurrentValue = DateOnly.FromDateTime(DateTime.Today);
+        }
+    }
+
+    protected override string FormatValueAsString(DateOnly value)
+    {
+        if (EqualityComparer<DateOnly>.Default.Equals(value, default))
+            return string.Empty;
+        // Use ISO so JS and DateOnly parsing align
+        return value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+    }
+
+    protected override bool TryParseValueFromString(string value, out DateOnly result, out string validationErrorMessage)
+    {
+        result = default;
+        validationErrorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return true;
+        }
+
+        var normalized = ToWesternDigits(value.Trim()).Replace("\u200F", "").Replace("\u200E", "").Trim();
+
+        // first accept ISO yyyy-MM-dd
+        if (DateOnly.TryParseExact(normalized, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var isoParsed))
+        {
+            result = isoParsed;
+            return true;
+        }
+
+        // accept some other common formats
+        var formats = new[] { "yyyy/MM/dd", "yyyy-M-d", "yyyy/MM/d", "yyyy/M/dd", "yyyy/MM/d" };
+        if (DateOnly.TryParseExact(normalized, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+        {
+            result = parsed;
+            return true;
+        }
+
+        // fallback: try DateTime parsing using invariant / current culture
+        if (DateTime.TryParse(normalized, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ||
+            DateTime.TryParse(normalized, CultureInfo.CurrentCulture, DateTimeStyles.None, out dt))
+        {
+            result = DateOnly.FromDateTime(dt);
+            return true;
+        }
+
+        // Try Persian (Jalali) detection, convert with PersianCalendar (year >= 1300)
+        var parts = normalized.Split(new[] { '/', '-', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 3 &&
+            int.TryParse(parts[0], out int y) &&
+            int.TryParse(parts[1], out int m) &&
+            int.TryParse(parts[2], out int d))
+        {
+            if (y >= 1300 && y <= 15000)
+            {
+                try
+                {
+                    var pc = new PersianCalendar();
+                    var greg = pc.ToDateTime(y, m, d, 0, 0, 0, 0);
+                    result = DateOnly.FromDateTime(greg);
+                    return true;
+                }
+                catch { }
+            }
+        }
+
+        validationErrorMessage = "Invalid date format.";
+        return false;
+    }
+
+    private static string ToWesternDigits(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+        var sb = new System.Text.StringBuilder(input.Length);
+        foreach (var ch in input)
+        {
+            if (ch >= '\u06F0' && ch <= '\u06F9')
+                sb.Append((char)('0' + (ch - '\u06F0')));
+            else if (ch >= '\u0660' && ch <= '\u0669')
+                sb.Append((char)('0' + (ch - '\u0660')));
+            else
+                sb.Append(ch);
+        }
+        return sb.ToString();
+    }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        var s = e?.Value?.ToString() ?? string.Empty;
+        // Debug log to console (you can remove)
+        await JS.InvokeVoidAsync("console.log", $"DatePicker OnInputChanged (id={Id}) value:", s);
+        CurrentValueAsString = s; // invokes TryParseValueFromString
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // init js datepicker for this input
+            await JS.InvokeVoidAsync("initPersianDatePicker", Id);
+            if (EqualityComparer<DateOnly>.Default.Equals(CurrentValue, default))
+            {
+                CurrentValue = DateOnly.FromDateTime(DateTime.Today);
+            }
+        }
+    }
+}

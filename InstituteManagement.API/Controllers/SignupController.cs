@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace InstituteManagement.API.Controllers
 {
@@ -20,21 +21,21 @@ namespace InstituteManagement.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
-        private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly ICaptchaValidator _captchaValidator;
+        private readonly IValidator<SignupDto> _validator;
 
         public SignupController(
             UserManager<AppUser> userManager,
             IMapper mapper,
             AppDbContext appDbContext,
-            IStringLocalizer<SharedResources> localizer,
-            ICaptchaValidator captchaValidator)
+            ICaptchaValidator captchaValidator,
+            IValidator<SignupDto> validator)
         {
             _userManager = userManager;
             _mapper = mapper;
             _appDbContext = appDbContext;
-            _localizer = localizer;
             _captchaValidator = captchaValidator;
+            _validator = validator;
         }
 
         [HttpGet("check-username")]
@@ -47,43 +48,40 @@ namespace InstituteManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Signup(SignupDto dto)
         {
+            // Run FluentValidation
+            ValidationResult validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                var modelState = new ModelStateDictionary();
+                foreach (var error in validationResult.Errors)
+                {
+                    modelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return ValidationProblem(modelState);
+            }
+
             // CAPTCHA verification
             if (dto.RecaptchaToken != "dev-mode")
             {
                 var captchaOk = await _captchaValidator.IsCaptchaValid(dto.RecaptchaToken, "submit");
                 if (!captchaOk)
-                {
-                    return ValidationError(nameof(dto.RecaptchaToken), _localizer["Signup.CaptchaFailed"]);
-                }
+                    return ValidationError(nameof(dto.RecaptchaToken), MessageKeys.Signup.Keys.RecaptchaTokenRequired.Get(dto.Language));
             }
 
-            // National ID validation
+            // National ID validation (custom logic)
             if (dto.NationalityCode == NationalityCode.IR &&
                 !NationalIdValidator.IsValidIranianCodeMeli(dto.NationalId))
             {
-                return ValidationError(nameof(dto.NationalId), _localizer["Signup.InvalidNationalId"]);
+                return ValidationError(nameof(dto.NationalId), MessageKeys.Signup.Keys.NationalIdMustBe10Digits.Get(dto.Language));
             }
 
             // Duplicate National ID
-            try
-            {
-                var existingPerson = await _appDbContext.People
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.NationalityCode == dto.NationalityCode && p.NationalId == dto.NationalId);
+            var existingPerson = await _appDbContext.People
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.NationalityCode == dto.NationalityCode && p.NationalId == dto.NationalId);
 
-                if (existingPerson != null)
-                {
-                    return ValidationError(nameof(dto.NationalId), _localizer["Signup.NationalIdAlreadyExists"]);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Problem(
-                    detail: ex.Message,
-                    title: _localizer["Signup.UnexpectedError"],
-                    statusCode: 500
-                );
-            }
+            if (existingPerson != null)
+                return ValidationError(nameof(dto.NationalId), MessageKeys.Signup.Keys.NationalIdAlreadyExists.Get(dto.Language));
 
             // Duplicate Username
             var existingUser = await _appDbContext.Users
@@ -91,11 +89,9 @@ namespace InstituteManagement.API.Controllers
                 .FirstOrDefaultAsync(u => u.UserName == dto.UserName);
 
             if (existingUser != null)
-            {
-                return ValidationError(nameof(dto.UserName), _localizer["Signup.UserNameAlreadyExists"]);
-            }
+                return ValidationError(nameof(dto.UserName), MessageKeys.Signup.Keys.UsernameAlreadyExists.Get(dto.Language));
 
-            // Create Person and User
+            // Create Person & User
             var password = GenerateRandomPassword(8);
 
             var person = new Person
@@ -110,27 +106,8 @@ namespace InstituteManagement.API.Controllers
                 NationalId = dto.NationalId
             };
 
-            try
-            {
-                _appDbContext.People.Add(person);
-                await _appDbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException dbEx)
-            {
-                return Problem(
-                    detail: dbEx.InnerException?.Message ?? dbEx.Message,
-                    title: _localizer["Signup.PersonSaveError"],
-                    statusCode: 400
-                );
-            }
-            catch (Exception ex)
-            {
-                return Problem(
-                    detail: ex.Message,
-                    title: _localizer["Signup.UnexpectedError"],
-                    statusCode: 500
-                );
-            }
+            _appDbContext.People.Add(person);
+            await _appDbContext.SaveChangesAsync();
 
             var user = new AppUser
             {
@@ -158,7 +135,7 @@ namespace InstituteManagement.API.Controllers
 
             return Ok(new
             {
-                Message = _localizer["Signup.SignupSuccess"],
+                Message = "Signup successful", // optionally wrap in MessageKeyExtensions if you have a localized success message
                 user.Id,
                 GeneratedPassword = password
             });

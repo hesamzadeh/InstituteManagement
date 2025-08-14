@@ -2,7 +2,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore; // <== Required for AddFluentValidationAutoValidation()
 using InstituteManagement.API.Mappings;
 using InstituteManagement.API.Services;
-using InstituteManagement.Application.Common;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Application.Validators.Auth;
 using InstituteManagement.Infrastructure;
