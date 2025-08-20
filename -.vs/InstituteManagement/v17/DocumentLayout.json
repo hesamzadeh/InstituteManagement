@@ -1,0 +1,221 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\source\\InstituteManagement\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\institutemanagement.front.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\institutemanagement.front.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\components\\pages\\auth\\signin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\components\\pages\\auth\\signin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\components\\pages\\signup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\components\\pages\\signup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|d:\\source\\institutemanagement\\institutemanagement.front\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{19A42A56-880A-4AE8-AA42-6D4D5AF389DF}|InstituteManagement.Front\\InstituteManagement.Front.csproj|solutionrelative:institutemanagement.front\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|d:\\source\\institutemanagement\\institutemanagement.shared\\dtos\\auth\\signindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|solutionrelative:institutemanagement.shared\\dtos\\auth\\signindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B00698FA-40E6-4F47-AC80-B75D680F7343}|InstituteManagement.Application\\InstituteManagement.Application.csproj|d:\\source\\institutemanagement\\institutemanagement.application\\validators\\auth\\signindtovalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B00698FA-40E6-4F47-AC80-B75D680F7343}|InstituteManagement.Application\\InstituteManagement.Application.csproj|solutionrelative:institutemanagement.application\\validators\\auth\\signindtovalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43379F5A-ED88-45E1-B155-CDCFD35E7BF3}|InstituteManagement.API\\InstituteManagement.API.csproj|d:\\source\\institutemanagement\\institutemanagement.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43379F5A-ED88-45E1-B155-CDCFD35E7BF3}|InstituteManagement.API\\InstituteManagement.API.csproj|solutionrelative:institutemanagement.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43379F5A-ED88-45E1-B155-CDCFD35E7BF3}|InstituteManagement.API\\InstituteManagement.API.csproj|d:\\source\\institutemanagement\\institutemanagement.api\\controllers\\signupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43379F5A-ED88-45E1-B155-CDCFD35E7BF3}|InstituteManagement.API\\InstituteManagement.API.csproj|solutionrelative:institutemanagement.api\\controllers\\signupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|d:\\source\\institutemanagement\\institutemanagement.shared\\resources\\components\\layout\\navmenu.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|solutionrelative:institutemanagement.shared\\resources\\components\\layout\\navmenu.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|d:\\source\\institutemanagement\\institutemanagement.shared\\resources\\components\\pages\\home.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{B4523F59-0A76-4A5C-B2B9-4EE01B2E38D9}|InstituteManagement.Shared\\InstituteManagement.Shared.csproj|solutionrelative:institutemanagement.shared\\resources\\components\\pages\\home.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Program.cs",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\Program.cs",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Program.cs",
+              "RelativeToolTip": "InstituteManagement.Front\\Program.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAmwEEAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T16:40:50.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "InstituteManagement.Front",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\InstituteManagement.Front.csproj",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\InstituteManagement.Front.csproj",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\InstituteManagement.Front.csproj",
+              "RelativeToolTip": "InstituteManagement.Front\\InstituteManagement.Front.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-14T16:38:48.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\Components\\_Imports.razor",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\_Imports.razor",
+              "RelativeToolTip": "InstituteManagement.Front\\Components\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-14T16:36:52.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SignInDtoValidator.cs",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Application\\Validators\\Auth\\SignInDtoValidator.cs",
+              "RelativeDocumentMoniker": "InstituteManagement.Application\\Validators\\Auth\\SignInDtoValidator.cs",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Application\\Validators\\Auth\\SignInDtoValidator.cs",
+              "RelativeToolTip": "InstituteManagement.Application\\Validators\\Auth\\SignInDtoValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T16:27:29.516Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SignInDto.cs",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\DTOs\\Auth\\SignInDto.cs",
+              "RelativeDocumentMoniker": "InstituteManagement.Shared\\DTOs\\Auth\\SignInDto.cs",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\DTOs\\Auth\\SignInDto.cs",
+              "RelativeToolTip": "InstituteManagement.Shared\\DTOs\\Auth\\SignInDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T16:18:03.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "InstituteManagement.Front\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-14T16:06:18.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SignupController.cs",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.API\\Controllers\\SignupController.cs",
+              "RelativeDocumentMoniker": "InstituteManagement.API\\Controllers\\SignupController.cs",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.API\\Controllers\\SignupController.cs",
+              "RelativeToolTip": "InstituteManagement.API\\Controllers\\SignupController.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T15:41:04.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Signup.razor",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Pages\\Signup.razor",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\Components\\Pages\\Signup.razor",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Pages\\Signup.razor",
+              "RelativeToolTip": "InstituteManagement.Front\\Components\\Pages\\Signup.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-14T04:35:39.806Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SignIn.razor",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Pages\\Auth\\SignIn.razor",
+              "RelativeDocumentMoniker": "InstituteManagement.Front\\Components\\Pages\\Auth\\SignIn.razor",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Front\\Components\\Pages\\Auth\\SignIn.razor",
+              "RelativeToolTip": "InstituteManagement.Front\\Components\\Pages\\Auth\\SignIn.razor",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAswBEAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-14T04:12:27.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "InstituteManagement.API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "InstituteManagement.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAwwA8AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T04:10:52.437Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Home.resx",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\Resources\\Components\\Pages\\Home.resx",
+              "RelativeDocumentMoniker": "InstituteManagement.Shared\\Resources\\Components\\Pages\\Home.resx",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\Resources\\Components\\Pages\\Home.resx",
+              "RelativeToolTip": "InstituteManagement.Shared\\Resources\\Components\\Pages\\Home.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-08-14T03:47:21.572Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "NavMenu.resx",
+              "DocumentMoniker": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\Resources\\Components\\Layout\\NavMenu.resx",
+              "RelativeDocumentMoniker": "InstituteManagement.Shared\\Resources\\Components\\Layout\\NavMenu.resx",
+              "ToolTip": "D:\\source\\InstituteManagement\\InstituteManagement.Shared\\Resources\\Components\\Layout\\NavMenu.resx",
+              "RelativeToolTip": "InstituteManagement.Shared\\Resources\\Components\\Layout\\NavMenu.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-08-14T03:47:19.304Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

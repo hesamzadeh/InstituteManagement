@@ -4,6 +4,7 @@ using InstituteManagement.Core.Entities;
 using InstituteManagement.Core.Entities.Profiles;
 using InstituteManagement.Infrastructure.Data.Configurations;
 using InstituteManagement.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,7 @@ namespace InstituteManagement.Infrastructure
 
         // Add DbSet properties only for the concrete types you will query directly
         public DbSet<Person> People => Set<Person>();
+        public DbSet<AppRole> AppRoles => Set<AppRole>();
         public DbSet<GymProfile> GymProfiles => Set<GymProfile>();
         public DbSet<GymStudentProfile> GymStudentProfiles => Set<GymStudentProfile>();
         public DbSet<GymTeacherProfile> GymTeacherProfiles => Set<GymTeacherProfile>();

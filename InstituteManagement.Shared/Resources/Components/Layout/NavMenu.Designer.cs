@@ -81,9 +81,9 @@ namespace InstituteManagement.Shared.Resources.Components.Layout {
         /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
-        internal static string Login {
+        internal static string SignIn {
             get {
-                return ResourceManager.GetString("Login", resourceCulture);
+                return ResourceManager.GetString("SignIn", resourceCulture);
             }
         }
         

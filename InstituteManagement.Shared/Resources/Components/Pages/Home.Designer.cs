@@ -167,5 +167,14 @@ namespace InstituteManagement.Shared.Resources.Components.Pages {
                 return ResourceManager.GetString("RegisterAsOwner", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register as Student.
+        /// </summary>
+        internal static string RegisterAsStudent {
+            get {
+                return ResourceManager.GetString("RegisterAsStudent", resourceCulture);
+            }
+        }
     }
 }

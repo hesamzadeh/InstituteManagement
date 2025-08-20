@@ -1,8 +1,9 @@
-using InstituteManagement.Application.Common;
+
 using InstituteManagement.Application.Common.Interfaces;
+using InstituteManagement.Front;
 using InstituteManagement.Front.Components;
 using InstituteManagement.Shared;
-using InstituteManagement.Shared.Resources;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -22,6 +23,19 @@ builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5270/");
 });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/signin";
+    options.LogoutPath = "/api/auth/logout";
+    options.AccessDeniedPath = "/accessdenied";
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddScoped<ApiAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
+    sp.GetRequiredService<ApiAuthenticationStateProvider>());
+builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(sp =>
 {

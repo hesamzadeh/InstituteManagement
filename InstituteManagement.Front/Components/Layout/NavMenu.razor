@@ -1,34 +1,29 @@
 ﻿@using InstituteManagement.Shared
-@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@inject ApiAuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+@inject NavigationManager Nav
 @inject UiLocalizer L
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <!-- App Name / Logo -->
-        <NavLink class="navbar-brand" href="/">@L["AppName"]</NavLink>
+<AuthorizeView>
+    <Authorized>
+        <button type="button" class="nav-link btn btn-link" @onclick="Logout">@L["Logout"]</button>
+    </Authorized>
+    <NotAuthorized>
+        <NavLink href="/signin">@L["Login"]</NavLink>
+    </NotAuthorized>
+</AuthorizeView>
 
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Nav Items -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">@L["Home"]</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/signup">@L["SignUp"]</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/login">@L["Login"]</NavLink>
-                </li>
-            </ul>
-
-            <!-- Language Selector -->
-            <LanguageSelector />
-        </div>
-    </div>
-</nav>
+@code {
+    private async Task Logout()
+    {
+        var res = await JS.InvokeAsync<JsonElement>("appAuth.post", "/api/auth/logout");
+        var ok = res.GetProperty("ok").GetBoolean();
+        if (ok)
+        {
+            AuthStateProvider.NotifyUserLogout();
+            Nav.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

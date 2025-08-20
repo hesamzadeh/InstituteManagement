@@ -5,6 +5,7 @@ using InstituteManagement.API.Services;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Application.Validators.Auth;
 using InstituteManagement.Infrastructure;
+using InstituteManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+// Identity (typical)
+builder.Services.AddIdentity<AppUser, AppRole>(options => {
+    // options.Password/Lockout etc
+}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 // FluentValidation integration
 builder.Services
@@ -51,6 +53,30 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
 });
 
+// Authentication cookie configuration
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "MyAppAuth";
+    options.Cookie.HttpOnly = true;
+    // If your Blazor and API are on different origins, set SameSite=None and Secure
+    options.Cookie.SameSite = SameSiteMode.None; // if cross-site
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // production
+    options.LoginPath = "/signin";
+    options.LogoutPath = "/api/auth/logout";
+});
+
+// CORS (if front-end runs on different origin during development)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalFrontend", policy =>
+    {
+        policy.WithOrigins("https://localhost:7224", "http://localhost:5090") // add your Blazor origin(s)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // Auth
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -76,6 +102,12 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty; // Optional: serve Swagger UI at root
     });
 }
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors("AllowLocalFrontend");
 
 app.UseRequestLocalization(); // Accept-Language support
 

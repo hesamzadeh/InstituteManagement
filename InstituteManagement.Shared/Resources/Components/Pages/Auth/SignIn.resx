@@ -117,43 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppIntro" xml:space="preserve">
-    <value>Manage institutes, gyms, teachers, students, and members — all in one place.</value>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
   </data>
-  <data name="AppTitle" xml:space="preserve">
-    <value>Welcome to Our Management Platform </value>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Remember Me</value>
   </data>
-  <data name="InstituteManagementTitle" xml:space="preserve">
-    <value>Gym Management </value>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>Sign In</value>
   </data>
-  <data name="InstituteManagementDesc" xml:space="preserve">
-    <value>Tools and features for managing gyms, trainers, and members.</value>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign In</value>
   </data>
-  <data name="GymManagementTitle" xml:space="preserve">
-    <value>Institute Management </value>
-  </data>
-  <data name="GymManagementDesc" xml:space="preserve">
-    <value>Tools and features for managing educational institutes, teachers, and students.</value>
-  </data>
-  <data name="RegisterAsOwner" xml:space="preserve">
-    <value>Register as Business Owner</value>
-  </data>
-  <data name="RegisterAsIndependentTeacher" xml:space="preserve">
-    <value> Register as Independent Teacher</value>
-  </data>
-  <data name="RegisterAsInstituteTeacher" xml:space="preserve">
-    <value> Register as Institute Teacher</value>
-  </data>
-  <data name="RegisterAsIndependentTrainer" xml:space="preserve">
-    <value>Register as Independent Trainer</value>
-  </data>
-  <data name="RegisterAsGymTrainer" xml:space="preserve">
-    <value>Register as Gym Trainer</value>
-  </data>
-  <data name="RegisterAsMember" xml:space="preserve">
-    <value> Register as Member</value>
-  </data>
-  <data name="RegisterAsStudent" xml:space="preserve">
-    <value>Register as Student</value>
+  <data name="UsernameOrEmail" xml:space="preserve">
+    <value>Username Or Email</value>
   </data>
 </root>
