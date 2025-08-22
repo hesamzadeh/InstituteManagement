@@ -1,29 +1,138 @@
 ﻿@using InstituteManagement.Shared
 @using Microsoft.AspNetCore.Components.Authorization
-@using System.Text.Json
-@inject ApiAuthenticationStateProvider AuthStateProvider
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthProvider
+@inject ApiAuthenticationStateProvider ApiAuthStateProvider
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 @inject UiLocalizer L
 
-<AuthorizeView>
-    <Authorized>
-        <button type="button" class="nav-link btn btn-link" @onclick="Logout">@L["Logout"]</button>
-    </Authorized>
-    <NotAuthorized>
-        <NavLink href="/signin">@L["Login"]</NavLink>
-    </NotAuthorized>
-</AuthorizeView>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <NavLink href="/" class="navbar-brand">Institute Management</NavLink>
+
+        <!-- Toggle button for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Left side -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <NavLink href="/" class="nav-link" Match="NavLinkMatch.All">@L["Home"]</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/about" class="nav-link">@L["About"]</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/contact" class="nav-link">@L["Contact"]</NavLink>
+                </li>
+            </ul>
+
+            <!-- Right side -->
+            <div class="d-flex align-items-center">
+                <!-- Language selector -->
+                <LanguageSelector />
+
+                <!-- User menu -->
+                <AuthorizeView>
+                    <Authorized>
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item dropdown" tabindex="0" @onblur="OnUserDropdownBlur">
+                                <a class="nav-link d-flex align-items-center" href="#" @onclick="ToggleUserDropdown">
+                                    <i class="bi bi-person-circle me-1"></i>
+                                    <span>@(userFullName ?? L["User"])</span>
+                                </a>
+                                <ul class=@UserDropdownMenuClass>
+                                    <li><NavLink class="dropdown-item" href="/profile">@L["My Profile"]</NavLink></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><button class="dropdown-item" @onclick="Logout">@L["Logout"]</button></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </Authorized>
+                    <NotAuthorized>
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <NavLink href="/signin" class="nav-link">@L["Login"]</NavLink>
+                            </li>
+                        </ul>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </div>
+</nav>
 
 @code {
+    private string? userFullName;
+    private bool isUserDropdownOpen;
+
+    private string UserDropdownMenuClass =>
+        $"dropdown-menu dropdown-menu-end{(isUserDropdownOpen ? " show" : "")}";
+
+    private AuthenticationStateChangedHandler? _authStateChangedHandler;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // initial auth state
+        var initial = await AuthProvider.GetAuthenticationStateAsync();
+        await UpdateUserInfoAsync(initial.User);
+
+        // subscribe to later changes
+        _authStateChangedHandler = async (task) =>
+        {
+            var authState = await task;
+            await UpdateUserInfoAsync(authState.User);
+            await InvokeAsync(StateHasChanged);
+        };
+        AuthProvider.AuthenticationStateChanged += _authStateChangedHandler;
+    }
+
+    private async Task UpdateUserInfoAsync(ClaimsPrincipal? user)
+    {
+        if (user?.Identity?.IsAuthenticated ?? false)
+        {
+            userFullName = user.FindFirst("FullName")?.Value
+                           ?? user.FindFirst(ClaimTypes.Name)?.Value
+                           ?? user.FindFirst("name")?.Value
+                           ?? user.Identity?.Name
+                           ?? L["User"];
+        }
+        else
+        {
+            userFullName = null;
+        }
+    }
+
+    private void ToggleUserDropdown() => isUserDropdownOpen = !isUserDropdownOpen;
+
+    private void OnUserDropdownBlur(FocusEventArgs _) => isUserDropdownOpen = false;
+
     private async Task Logout()
     {
-        var res = await JS.InvokeAsync<JsonElement>("appAuth.post", "/api/auth/logout");
-        var ok = res.GetProperty("ok").GetBoolean();
-        if (ok)
+        try
         {
-            AuthStateProvider.NotifyUserLogout();
-            Nav.NavigateTo("/", forceLoad: true);
+            var res = await JS.InvokeAsync<System.Text.Json.JsonElement>("appAuth.post", "/api/auth/logout");
+            var ok = res.GetProperty("ok").GetBoolean();
+            if (ok)
+            {
+                ApiAuthStateProvider.NotifyUserLogout();
+                Nav.NavigateTo("/", forceLoad: true);
+            }
         }
+        catch
+        {
+            Nav.NavigateTo("/logout", forceLoad: true);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_authStateChangedHandler != null)
+            AuthProvider.AuthenticationStateChanged -= _authStateChangedHandler;
     }
 }

@@ -111,6 +111,8 @@ app.UseCors("AllowLocalFrontend");
 
 app.UseRequestLocalization(); // Accept-Language support
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -21,7 +21,7 @@ builder.Services.AddRazorComponents()
 // HttpClient setup for calling API
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5270/");
+    client.BaseAddress = new Uri("https://localhost:5271/");
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
