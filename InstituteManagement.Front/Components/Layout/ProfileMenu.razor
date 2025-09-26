@@ -1,0 +1,193 @@
+﻿@using System.Security.Claims
+@using InstituteManagement.Shared
+@using System.Text.Json
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject ApiAuthenticationStateProvider ApiAuthStateProvider
+@inject UiLocalizer L
+
+<div class="profile-root d-flex align-items-center">
+    <AuthorizeView>
+        <Authorized>
+            <div class="profile-preview position-relative"
+                 @onmouseover="() => showHover = true"
+                 @onmouseout="() => showHover = false">
+                <button class="btn btn-link p-0 d-flex align-items-center" @onclick="ToggleSidebar">
+                    <img src="@ProfilePictureOrPlaceholder" class="rounded-circle profile-avatar" alt="avatar" />
+                </button>
+
+                @* Hover card (small) *@
+                @if (showHover)
+                {
+                    <div class="card profile-hover shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="fw-bold">@FullName</div>
+                            <div class="text-muted small">@UserName</div>
+                            <div class="text-muted small">@Email</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div>
+                <a class="btn btn-link" href="/signin">@L["Login"]</a>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@* Sidebar overlay *@
+@if (isSidebarOpen)
+{
+    <div class="profile-sidebar-overlay" @onclick="CloseSidebar"></div>
+
+    <div class="profile-sidebar shadow-lg">
+        <div class="sidebar-header d-flex align-items-center">
+            <img src="@ProfilePictureOrPlaceholder" class="rounded-circle profile-avatar-lg me-2" />
+            <div>
+                <div class="fw-bold">@UserName</div>
+                <div class="text-muted small">@FullName</div>
+            </div>
+            <button class="btn btn-sm btn-close ms-auto" @onclick="CloseSidebar" title="@L["Close"]"></button>
+        </div>
+
+        <hr />
+
+        <div class="sidebar-links">
+            <!-- always-visible: Profile -->
+            <a class="sidebar-link" href="/profile">
+                <i class="bi bi-person"></i>
+                <span>@L["MyProfile"]</span>
+            </a>
+
+            <!-- conditional items -->
+            @if (IsAuthenticated)
+            {
+                <a class="sidebar-link" href="/settings"><i class="bi bi-gear"></i> <span>@L["Settings"]</span></a>
+                <a class="sidebar-link" href="/profiles"><i class="bi bi-people"></i> <span>@L["ManageProfiles"]</span></a>
+                <hr />
+            }
+
+            <!-- language selector (always shown) -->
+            <div class="sidebar-row">
+                <label class="form-label mb-1 small">@L["Language"]</label>
+                <LanguageSelector />
+            </div>
+
+            <!-- theme toggle (always shown) -->
+            <div class="sidebar-row mt-2">
+                <label class="form-label mb-1 small">@L["Theme"]</label>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="small text-muted">🌤</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="themeSwitch" checked="@isDark" @onchange="ToggleTheme" />
+                    </div>
+                    <span class="small text-muted">🌙</span>
+                </div>
+            </div>
+
+            <div class="mt-auto sidebar-footer">
+                @if (IsAuthenticated)
+                {
+                    <button class="btn btn-outline-danger w-100" @onclick="Logout">@L["Logout"]</button>
+                }
+                else
+                {
+                    <a class="btn btn-primary w-100" href="/signin">@L["Login"]</a>
+                }
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private bool showHover;
+    private bool isSidebarOpen;
+    private bool isDark;
+
+    private ClaimsPrincipal? user;
+    private bool IsAuthenticated => user?.Identity?.IsAuthenticated ?? false;
+
+    // extracted claims
+    private string UserName => GetClaim(ClaimTypes.Upn) ?? GetClaim("preferred_username") ?? "";
+    private string FullName => GetClaim(ClaimTypes.Name) ?? GetClaim("FullName") ?? UserName;
+    private string Email => GetClaim(ClaimTypes.Email) ?? "";
+    private string ProfilePictureOrPlaceholder => GetClaim("ProfilePictureUrl") ?? "/images/profiles/profile-pics/default-icon.jpg";
+    private string LastUsedProfileId => GetClaim("LastUsedProfileId") ?? "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserAsync();
+
+        // optionally detect persisted theme
+        try
+        {
+            isDark = await JS.InvokeAsync<bool>("profileMenu.getSavedTheme");
+            await ApplyTheme(isDark);
+        }
+        catch { }
+    }
+
+    private async Task LoadUserAsync()
+    {
+        var auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = auth.User;
+
+        // If you use a specialized ApiAuthenticationStateProvider that notifies on login/logout,
+        // Subscribe to its AuthenticationStateChanged event if necessary to auto-update.
+    }
+
+    private string? GetClaim(string type)
+    {
+        return user?.FindFirst(type)?.Value;
+    }
+
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen;
+    }
+
+    private void CloseSidebar()
+    {
+        isSidebarOpen = false;
+    }
+
+    private async Task ToggleTheme(ChangeEventArgs e)
+    {
+        isDark = (bool)e.Value;
+        await ApplyTheme(isDark);
+    }
+
+    private async Task ApplyTheme(bool dark)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("profileMenu.setTheme", dark ? "dark" : "light");
+        }
+        catch { }
+    }
+
+    private async Task Logout()
+    {
+        try
+        {
+            var res = await JS.InvokeAsync<JsonElement>("appAuth.post", "/api/auth/logout");
+            var ok = res.GetProperty("ok").GetBoolean();
+            if (ok)
+            {
+                // notify your ApiAuthenticationStateProvider or refresh authentication state
+                if (ApiAuthStateProvider != null)
+                    ApiAuthStateProvider.NotifyUserLogout();
+                else
+                    await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+                Nav.NavigateTo("/", forceLoad: true);
+            }
+        }
+        catch
+        {
+            Nav.NavigateTo("/logout", forceLoad: true);
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿// wwwroot/js/auth.js
+﻿// wwwroot/js/auth.js 
 (function () {
     // appAuth helper
     window.appAuth = {
@@ -18,11 +18,8 @@
         // resolve a path or absolute URL to a full URL
         _toUrl: function (pathOrUrl) {
             if (!pathOrUrl) return this._apiBase;
-            // if absolute url already
             if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
-            // if path begins with '/', append to base
             if (pathOrUrl.startsWith('/')) return this._apiBase + pathOrUrl;
-            // otherwise treat as relative path
             return this._apiBase + '/' + pathOrUrl;
         },
 
@@ -41,7 +38,7 @@
                 let body;
                 try { body = JSON.parse(txt); } catch { body = txt; }
 
-                return { ok: res.ok, status: res.status, body };
+                return { ok: res.ok, status: res.status, body: body };
             } catch (err) {
                 return { ok: false, status: 0, error: err && err.message ? err.message : String(err) };
             }
@@ -52,7 +49,6 @@
             const full = this._toUrl(url);
             try {
                 const res = await fetch(full, { method: 'POST', credentials: 'include' });
-                // try to parse response body if any
                 let parsed = null;
                 try { parsed = await res.json(); } catch { parsed = null; }
                 return { ok: res.ok, status: res.status, body: parsed };
@@ -66,20 +62,51 @@
             const full = this._toUrl(url);
             try {
                 const res = await fetch(full, { credentials: 'include' });
-                if (!res.ok) return { IsAuthenticated: false, Username: '' };
+                if (!res.ok) return { IsAuthenticated: false, Username: '', FullName: '' };
 
                 const payload = await res.json();
 
-                // Normalize common property names (some endpoints return camelCase, some PascalCase)
+                // Normalize common property names and include FullName normalization
                 const isAuthenticated =
-                    payload.IsAuthenticated ?? payload.isAuthenticated ?? payload.isAuthenticated ?? payload.authenticated ?? false;
+                    payload.IsAuthenticated ?? payload.isAuthenticated ?? payload.authenticated ?? false;
                 const username =
                     payload.Username ?? payload.username ?? payload.name ?? payload.userName ?? '';
+                const fullName =
+                    payload.FullName ?? payload.fullName ?? payload.displayName ?? '';
 
-                return { IsAuthenticated: Boolean(isAuthenticated), Username: String(username) };
+                return {
+                    IsAuthenticated: Boolean(isAuthenticated),
+                    Username: String(username),
+                    FullName: String(fullName)
+                };
             } catch (err) {
-                return { IsAuthenticated: false, Username: '' };
+                return { IsAuthenticated: false, Username: '', FullName: '' };
             }
+        },
+
+        // culture helpers (used by NavMenu earlier)
+        setCulture: function (code) {
+            try {
+                var cookieValue = 'c=' + encodeURIComponent(code) + '|uic=' + encodeURIComponent(code);
+                document.cookie = '.AspNetCore.Culture=' + cookieValue + ';path=/';
+                location.reload();
+            } catch (e) {
+                console.warn("setCulture failed", e);
+            }
+        },
+
+        getCulture: function () {
+            try {
+                var m = document.cookie.match(/\.AspNetCore\.Culture=([^;]+)/);
+                if (m && m[1]) {
+                    var val = decodeURIComponent(m[1]);
+                    var match = val.match(/c=([^|]+)/);
+                    if (match) return match[1];
+                }
+            } catch (e) {
+                console.warn("getCulture failed", e);
+            }
+            return null;
         }
     };
 })();

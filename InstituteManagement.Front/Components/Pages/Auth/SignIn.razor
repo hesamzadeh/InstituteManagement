@@ -1,136 +1,58 @@
 ﻿@page "/signin"
 @using System.Text.Json
-@using InstituteManagement.Shared
 @using InstituteManagement.Shared.DTOs.Auth
 @rendermode InteractiveServer
-@inject IJSRuntime JS
-@inject NavigationManager Nav
-@inject ApiAuthenticationStateProvider AuthStateProvider
-@inject UiLocalizer L
+@inherits SignInBase
 
 <PageTitle>@L["SignInTitle"]</PageTitle>
 
 <div class="row justify-content-center mt-4">
     <div class="col-md-6">
-        <EditForm Model="model" OnValidSubmit="HandleSignIn" FormName="SignInForm">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+        <div class="card shadow-sm p-4">
+            <h4 class="mb-3 text-center">@L["SignInTitle"]</h4>
 
-            <div class="mb-3">
-                <label class="form-label">@L["UsernameOrEmail"]</label>
-                <InputText @bind-Value="model.UsernameOrEmail" class="form-control" />
-            </div>
+            <EditForm EditContext="editContext" OnValidSubmit="HandleSignIn">
+                <div class="mb-3">
+                    <label class="form-label">@L["UsernameOrEmail"]</label>
+                    <InputText @bind-Value="model.UsernameOrEmail" class="form-control" />
+                    <ValidationMessage For="() => model.UsernameOrEmail" />
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">@L["Password"]</label>
-                <InputText @bind-Value="model.Password" type="password" class="form-control" />
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">@L["Password"]</label>
+                    <InputText @bind-Value="model.Password" type="password" class="form-control" />
+                    <ValidationMessage For="() => model.Password" />
+                </div>
 
-            <div class="form-check mb-3">
-                <InputCheckbox @bind-Value="model.RememberMe" class="form-check-input" />
-                <label class="form-check-label">@L["RememberMe"]</label>
-            </div>
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="model.RememberMe" class="form-check-input" />
+                    <label class="form-check-label">@L["RememberMe"]</label>
+                </div>
 
-            <button type="submit" class="btn btn-primary">@L["SignIn"]</button>
-        </EditForm>
+                <div class="d-grid mb-2">
+                    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 
-        @if (!string.IsNullOrEmpty(message))
-        {
-            <div class="alert alert-danger mt-3">@message</div>
-        }
+                            @L["SigningIn"]
+                        }
+                        else
+                        {
+                            @L["SignIn"]
+                        }
+                    </button>
+                </div>
+
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <div class="alert alert-danger mt-2">@message</div>
+                }
+                @if (recaptchaFailed)
+                {
+                    <div class="alert alert-danger mt-2">"Please complete the reCAPTCHA verification."</div>
+                }
+            </EditForm>
+        </div>
     </div>
 </div>
-
-@code {
-    private readonly SignInDto model = new();
-    private string? message;
-    private bool _jsReady;
-
-    // Called after each render; when prerendering is enabled this runs twice:
-    // once during server prerender (JS not available), once on client (JS available).
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Try a small harmless JS call — it will throw during server prerender,
-            // and succeed on the client once the JS runtime is available.
-            try
-            {
-                await JS.InvokeVoidAsync("console.debug", "sign-in: js-runtime-check");
-                _jsReady = true;
-                StateHasChanged();
-            }
-            catch
-            {
-                // ignore — prerender phase or JS not ready yet
-                _jsReady = false;
-            }
-        }
-    }
-
-    private async Task HandleSignIn()
-    {
-        message = null;
-
-        if (!_jsReady)
-        {
-            message = L["WaitForPageToLoad"]; // add this key to localization or use literal string
-            return;
-        }
-
-        JsonElement result;
-        try
-        {
-            // call the JS helper - it returns a plain object { ok, status, body }
-            result = await JS.InvokeAsync<JsonElement>("appAuth.signIn", "/api/auth/signin", model);
-        }
-        catch (JSException jsEx)
-        {
-            message = "Client-side error calling signin (JS): " + jsEx.Message;
-            return;
-        }
-        catch (Exception ex)
-        {
-            message = "Unexpected client-side error: " + ex.Message;
-            return;
-        }
-
-        // read ok
-        bool ok = false;
-        try { ok = result.GetProperty("ok").GetBoolean(); } catch { ok = false; }
-
-        if (!ok)
-        {
-            // Try to get a helpful message
-            try
-            {
-                var body = result.GetProperty("body");
-                // if body is text it may already be a string
-                if (body.ValueKind == JsonValueKind.String)
-                {
-                    message = body.GetString();
-                }
-                else if (body.ValueKind == JsonValueKind.Object && body.TryGetProperty("Message", out var m))
-                {
-                    message = m.GetString() ?? "Sign-in failed";
-                }
-                else
-                {
-                    message = "Sign-in failed";
-                }
-            }
-            catch
-            {
-                message = "Sign-in failed";
-            }
-            return;
-        }
-
-        // Success — tell the provider to re-evaluate auth state and update UI
-        // (NotifyUserAuthentication should call NotifyAuthenticationStateChanged internally)
-        AuthStateProvider.NotifyUserAuthentication();
-
-        // Navigate to home (forceLoad may be used if you want full reload)
-        Nav.NavigateTo("/", forceLoad: false);
-    }
-}

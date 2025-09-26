@@ -28,7 +28,16 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
                 if (isAuthenticated)
                 {
                     var username = res.GetProperty("Username").GetString() ?? "";
-                    var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, username) }, "apiauth");
+                    var fullName = res.GetProperty("FullName").GetString() ?? "";
+                    var claims = new List<Claim>
+                {
+                    // Put human-friendly full name into ClaimTypes.Name
+                    new Claim(ClaimTypes.Name, fullName),
+
+                    // Keep original username in UPN (useful to find the login)
+                    new Claim(ClaimTypes.Upn, username)
+                };
+                    var identity = new ClaimsIdentity(claims, "apiauth");
                     return new AuthenticationState(new ClaimsPrincipal(identity));
                 }
             }

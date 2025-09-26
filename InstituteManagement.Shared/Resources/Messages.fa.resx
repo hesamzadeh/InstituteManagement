@@ -183,4 +183,28 @@
   <data name="Signup.UsernameMinLength" xml:space="preserve">
     <value>حداقل طول نام کاربری 5 کاراکتر است.</value>
   </data>
+  <data name="Auth.UsernameOrEmailRequired" xml:space="preserve">
+    <value>لطفاً نام کاربری یا ایمیل خود را وارد کنید.</value>
+  </data>
+  <data name="Auth.UsernameOrEmailMaxLength" xml:space="preserve">
+    <value>نام کاربری یا ایمیل نباید بیش از ۱۰۰ کاراکتر باشد.</value>
+  </data>
+  <data name="Auth.PasswordRequired" xml:space="preserve">
+    <value>لطفاً رمز عبور خود را وارد کنید.</value>
+  </data>
+  <data name="Auth.PasswordMinLength" xml:space="preserve">
+    <value>رمز عبور باید حداقل ۶ کاراکتر باشد.</value>
+  </data>
+  <data name="Auth.RecaptchaTokenRequired" xml:space="preserve">
+    <value>لطفاً آزمون reCAPTCHA را تکمیل کنید.</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>نام کاربری یا رمز عبور نامعتبر است.</value>
+  </data>
+  <data name="Auth.SignInSuccess" xml:space="preserve">
+    <value>با موفقیت وارد شدید.</value>
+  </data>
+  <data name="Auth.SignInFailed" xml:space="preserve">
+    <value>ورود ناموفق بود.</value>
+  </data>
 </root>

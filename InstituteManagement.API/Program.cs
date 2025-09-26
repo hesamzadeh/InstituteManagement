@@ -27,10 +27,13 @@ builder.Services.AddIdentity<AppUser, AppRole>(options => {
     // options.Password/Lockout etc
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPrincipalFactory>();
+
 // FluentValidation integration
 builder.Services
     .AddFluentValidationAutoValidation() // <- This requires FluentValidation.AspNetCore
-    .AddValidatorsFromAssemblyContaining<SignupDtoValidator>();
+    .AddValidatorsFromAssemblyContaining<SignupDtoValidator>()
+    .AddValidatorsFromAssemblyContaining<SignInDtoValidator>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

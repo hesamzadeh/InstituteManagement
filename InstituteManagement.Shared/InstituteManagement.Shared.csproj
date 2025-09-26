@@ -20,6 +20,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>NavMenu.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Components\Layout\ProfileMenu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProfileMenu.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Components\Pages\Home.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -31,6 +36,10 @@
     <EmbeddedResource Update="Resources\Components\Layout\NavMenu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NavMenu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Layout\ProfileMenu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProfileMenu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Pages\Home.resx">
       <Generator>ResXFileCodeGenerator</Generator>

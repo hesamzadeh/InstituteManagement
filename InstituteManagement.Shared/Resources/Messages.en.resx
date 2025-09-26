@@ -183,4 +183,28 @@
   <data name="Signup.UsernameMinLength" xml:space="preserve">
     <value>Username must be at least 5 characters.</value>
   </data>
+  <data name="Auth.UsernameOrEmailRequired" xml:space="preserve">
+    <value>Please enter your username or email.</value>
+  </data>
+  <data name="Auth.UsernameOrEmailMaxLength" xml:space="preserve">
+    <value>Username or email must be at most 100 characters.</value>
+  </data>
+  <data name="Auth.PasswordRequired" xml:space="preserve">
+    <value>Please enter your password.</value>
+  </data>
+  <data name="Auth.PasswordMinLength" xml:space="preserve">
+    <value>Password must be at least 6 characters.</value>
+  </data>
+  <data name="Auth.RecaptchaTokenRequired" xml:space="preserve">
+    <value>Please complete the reCAPTCHA verification.</value>
+  </data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+  <data name="Auth.SignInSuccess" xml:space="preserve">
+    <value>Signed in successfully.</value>
+  </data>
+  <data name="Auth.SignInFailed" xml:space="preserve">
+    <value>Signed in Failed.</value>
+  </data>
 </root>

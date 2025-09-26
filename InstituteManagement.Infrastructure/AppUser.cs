@@ -9,5 +9,6 @@ namespace InstituteManagement.Infrastructure
         // You can add custom properties here, like:
         public Guid PersonId { get; set; }
         public Person? Person { get; set; }
+        public string? FullName { get; set; }
     }
 }

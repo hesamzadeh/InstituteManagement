@@ -2,6 +2,20 @@
 {
     public static class MessageKeys
     {
+        public static class Auth
+        {
+            public enum Keys
+            {
+                RecaptchaTokenRequired,
+                InvalidCredentials,
+                SignInSuccess,
+                UsernameOrEmailRequired,
+                UsernameOrEmailMaxLength,
+                PasswordRequired,
+                PasswordMinLength
+            }
+        }
+
         public static class Signup
         {
             public enum Keys

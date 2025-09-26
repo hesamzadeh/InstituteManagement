@@ -33,35 +33,9 @@
             </ul>
 
             <!-- Right side -->
-            <div class="d-flex align-items-center">
-                <!-- Language selector -->
-                <LanguageSelector />
-
+            <div class="d-flex align-items-center">                
                 <!-- User menu -->
-                <AuthorizeView>
-                    <Authorized>
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item dropdown" tabindex="0" @onblur="OnUserDropdownBlur">
-                                <a class="nav-link d-flex align-items-center" href="#" @onclick="ToggleUserDropdown">
-                                    <i class="bi bi-person-circle me-1"></i>
-                                    <span>@(userFullName ?? L["User"])</span>
-                                </a>
-                                <ul class=@UserDropdownMenuClass>
-                                    <li><NavLink class="dropdown-item" href="/profile">@L["My Profile"]</NavLink></li>
-                                    <li><hr class="dropdown-divider" /></li>
-                                    <li><button class="dropdown-item" @onclick="Logout">@L["Logout"]</button></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </Authorized>
-                    <NotAuthorized>
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <NavLink href="/signin" class="nav-link">@L["Login"]</NavLink>
-                            </li>
-                        </ul>
-                    </NotAuthorized>
-                </AuthorizeView>
+                <ProfileMenu />
             </div>
         </div>
     </div>

@@ -1,11 +1,18 @@
-﻿window.getRecaptchaToken = function () {
+﻿// wwwroot/js/getRecaptchaToken.js
+window.getRecaptchaToken = function () {
     return new Promise((resolve, reject) => {
-        if (typeof grecaptcha !== 'undefined') {
-            grecaptcha.ready(function () {
-                grecaptcha.execute('6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3', { action: 'submit' })
-                    .then(resolve)
-                    .catch(reject);
-            });
+        var siteKey = '6LdpWZcrAAAAAHve6fyRO5UIMDPXpZgHQesM0hM3';
+
+        if (typeof grecaptcha !== 'undefined' && grecaptcha && grecaptcha.execute) {
+            try {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(siteKey, { action: 'submit' })
+                        .then(token => resolve(token))
+                        .catch(err => reject(err));
+                });
+            } catch (e) {
+                reject(e);
+            }
         } else {
             reject("grecaptcha not loaded");
         }
