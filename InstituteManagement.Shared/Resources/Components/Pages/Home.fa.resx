@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
-    <value>به پلتفرم مدیریت ما خوش آمدید</value>
-  </data>
   <data name="AppIntro" xml:space="preserve">
     <value>مدیریت آموزشگاه‌ها، باشگاه‌ها، مربیان، دانش‌آموزان و اعضا — همه در یکجا.</value>
   </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>به پلتفرم مدیریت ما خوش آمدید</value>
+  </data>
   <data name="InstituteManagementTitle" xml:space="preserve">
-    <value>مدیریت باشگاه</value>
+    <value> مدیریت آموزشگاه</value>
   </data>
   <data name="InstituteManagementDesc" xml:space="preserve">
     <value>ابزارها و امکاناتی برای مدیریت باشگاه‌ها، مربیان و اعضا.</value>
   </data>
   <data name="GymManagementTitle" xml:space="preserve">
-    <value> مدیریت آموزشگاه</value>
+    <value>مدیریت باشگاه</value>
   </data>
   <data name="GymManagementDesc" xml:space="preserve">
     <value>ابزارها و امکاناتی برای مدیریت آموزشگاه‌ها، مربیان و دانش‌آموزان.</value>
@@ -144,9 +144,6 @@
   <data name="RegisterAsInstituteTeacher" xml:space="preserve">
     <value>ثبت‌نام به عنوان مدرس آموزشگاه</value>
   </data>
-  <data name="RegisterAsStudent" xml:space="preserve">
-    <value>ثبت‌نام به عنوان دانش‌آموز</value>
-  </data>
   <data name="RegisterAsIndependentTrainer" xml:space="preserve">
     <value>ثبت‌نام به عنوان مربی مستقل</value>
   </data>
@@ -155,5 +152,8 @@
   </data>
   <data name="RegisterAsMember" xml:space="preserve">
     <value>ثبت‌نام به عنوان عضو</value>
+  </data>
+  <data name="RegisterAsStudent" xml:space="preserve">
+    <value>ثبت‌نام به عنوان دانش‌آموز</value>
   </data>
 </root>

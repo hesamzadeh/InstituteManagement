@@ -2,6 +2,7 @@
 {
     public enum ProfileType
     {
+        None,
         Gym_Student,
         Gym_Teacher,
         Gym_IndependentTeacher,

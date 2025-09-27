@@ -88,7 +88,7 @@ namespace InstituteManagement.Shared.Resources.Components.Pages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Institute Management .
+        ///   Looks up a localized string similar to Gym Management .
         /// </summary>
         internal static string GymManagementTitle {
             get {
@@ -106,7 +106,7 @@ namespace InstituteManagement.Shared.Resources.Components.Pages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gym Management .
+        ///   Looks up a localized string similar to Institute Management .
         /// </summary>
         internal static string InstituteManagementTitle {
             get {

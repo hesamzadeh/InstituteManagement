@@ -207,4 +207,7 @@
   <data name="Auth.SignInFailed" xml:space="preserve">
     <value>ورود ناموفق بود.</value>
   </data>
+  <data name="Signup.DisplayNameRequired" xml:space="preserve">
+    <value>وارد کردن نام سازمان الزامی است.</value>
+  </data>
 </root>

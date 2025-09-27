@@ -1,5 +1,6 @@
 ﻿@page "/signup"
 @using InstituteManagement.Shared
+@using InstituteManagement.Shared.Enums
 @using Microsoft.Extensions.Localization
 @using System.Globalization
 @rendermode InteractiveServer
@@ -15,7 +16,14 @@
                 @if (!SignupSuccess)
                 {
                     <EditForm EditContext="editContext" OnValidSubmit="HandleSignup">
-
+                        @if (signup.InitialRole == ProfileType.Gym_Organization || signup.InitialRole == ProfileType.Institute_Organization)
+                        {
+                            <div class="mb-3">
+                                <InputText @bind-Value="signup.DisplayName" class="form-control"
+                                           placeholder="@L[signup.InitialRole + "DisplayName"]" />
+                                <ValidationMessage For="() => signup.DisplayName" />
+                            </div>
+                        }
                         @* First Name *@
                         <div class="mb-3">
                             <InputText @bind-Value="signup.FirstName" class="form-control" placeholder="@L["FirstName"]" />

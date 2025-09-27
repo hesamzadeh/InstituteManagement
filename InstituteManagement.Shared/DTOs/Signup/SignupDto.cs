@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using InstituteManagement.Shared.Enums;
+using System.Globalization;
 
 namespace InstituteManagement.Shared.DTOs.Signup
 {
@@ -14,5 +15,7 @@ namespace InstituteManagement.Shared.DTOs.Signup
         public string? Email { get; set; }
         public string? RecaptchaToken { get; set; }
         public string? Language { get; set; }
+        public ProfileType InitialRole { get; set; }
+        public string? DisplayName { get; set; }
     }
 }

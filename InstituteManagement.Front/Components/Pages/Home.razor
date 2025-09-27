@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using InstituteManagement.Shared
+@using InstituteManagement.Shared.Enums
 @using Microsoft.Extensions.Localization
 @inject NavigationManager Nav
 @inject UiLocalizer L
@@ -28,22 +29,22 @@
                     <p>@L["InstituteManagementDesc"]</p>
 
                     <button class="btn btn-primary m-1"
-                            @onclick="@(() => GoToSignup("InstituteOwner"))">
+                            @onclick="@(() => GoToSignup(ProfileType.Institute_Organization))">
                         @L["RegisterAsOwner"]
                     </button>
 
                     <button class="btn btn-secondary m-1"
-                            @onclick="@(() => GoToSignup("InstituteTeacher"))">
+                            @onclick="@(() => GoToSignup(ProfileType.Institute_IndependentTeacher))">
                         @L["RegisterAsIndependentTeacher"]
                     </button>
 
                     <button class="btn btn-outline-secondary m-1"
-                            @onclick="@(() => GoToInviteSignup("InstituteTeacher"))">
+                            @onclick="@(() => GoToInviteSignup(ProfileType.Institute_Teacher))">
                         @L["RegisterAsInstituteTeacher"]
                     </button>
 
                     <button class="btn btn-outline-primary m-1"
-                            @onclick="@(() => GoToInviteSignup("InstituteStudent"))">
+                            @onclick="@(() => GoToInviteSignup(ProfileType.Institute_Student))">
                         @L["RegisterAsStudent"]
                     </button>
                 </div>
@@ -58,22 +59,22 @@
                     <p>@L["GymManagementDesc"]</p>
 
                     <button class="btn btn-primary m-1"
-                            @onclick="@(() => GoToSignup("GymOwner"))">
+                            @onclick="@(() => GoToSignup(ProfileType.Gym_Organization))">
                         @L["RegisterAsOwner"]
                     </button>
 
                     <button class="btn btn-secondary m-1"
-                            @onclick="@(() => GoToSignup("GymTeacher"))">
+                            @onclick="@(() => GoToSignup(ProfileType.Gym_IndependentTeacher))">
                         @L["RegisterAsIndependentTrainer"]
                     </button>
 
                     <button class="btn btn-outline-secondary m-1"
-                            @onclick="@(() => GoToInviteSignup("GymTeacher"))">
+                            @onclick="@(() => GoToInviteSignup(ProfileType.Gym_Teacher))">
                         @L["RegisterAsGymTrainer"]
                     </button>
 
                     <button class="btn btn-outline-primary m-1"
-                            @onclick="@(() => GoToInviteSignup("GymStudent"))">
+                            @onclick="@(() => GoToInviteSignup(ProfileType.Gym_Student))">
                         @L["RegisterAsMember"]
                     </button>
                 </div>
@@ -83,14 +84,14 @@
 </div>
 
 @code {
-    private void GoToSignup(string role)
+    private void GoToSignup(ProfileType role)
     {
-        Nav.NavigateTo($"/signup?role={role}");
+        Nav.NavigateTo($"/signup?role={role.ToString()}");
     }
 
-    private void GoToInviteSignup(string role)
+    private void GoToInviteSignup(ProfileType role)
     {
         // In a real flow, inviteToken would be provided via email or a link
-        Nav.NavigateTo($"/signup?role={role}&inviteToken=sampleToken123");
+        Nav.NavigateTo($"/signup?role={role.ToString()}&inviteToken=sampleToken123");
     }
 }

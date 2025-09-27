@@ -165,4 +165,10 @@
   <data name="ServerError" xml:space="preserve">
     <value>خطای غیرمنتظره‌ای در سرور رخ داد. لطفاً بعداً دوباره تلاش کنید.</value>
   </data>
+  <data name="Gym_OrganizationDisplayName" xml:space="preserve">
+    <value>نام باشگاه</value>
+  </data>
+  <data name="Institute_OrganizationDisplayName" xml:space="preserve">
+    <value>نام آموزشگاه</value>
+  </data>
 </root>

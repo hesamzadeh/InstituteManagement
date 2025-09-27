@@ -1,5 +1,6 @@
 ﻿using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.Signup;
+using InstituteManagement.Shared.Enums;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
@@ -20,6 +21,9 @@ namespace InstituteManagement.Front.Components.Pages
         protected SignupDto signup = new() { NationalityCode = NationalityCode.IR };
         protected List<NationalityCode> NationalityOptions =
             Enum.GetValues<NationalityCode>().ToList();
+
+        [SupplyParameterFromQuery(Name = "role")]
+        public string? RoleQuery { get; set; }
 
         protected EditContext editContext;
         protected ValidationMessageStore messageStore;
@@ -46,16 +50,24 @@ namespace InstituteManagement.Front.Components.Pages
         {
             editContext = new EditContext(signup);
             messageStore = new ValidationMessageStore(editContext);
-            editContext.OnFieldChanged += (_, args) =>
+
+
+            if (!string.IsNullOrEmpty(RoleQuery) &&
+                Enum.TryParse<ProfileType>(RoleQuery, ignoreCase: true, out var parsed))
             {
-                messageStore.Clear(args.FieldIdentifier);
+                signup.InitialRole = parsed;
+            }
 
-                // clear global messages when user edits
-                responseMessage = "";
-                responseMessageKey = null;
+            editContext.OnFieldChanged += (_, args) =>
+                {
+                    messageStore.Clear(args.FieldIdentifier);
 
-                StateHasChanged();
-            };
+                    // clear global messages when user edits
+                    responseMessage = "";
+                    responseMessageKey = null;
+
+                    StateHasChanged();
+                };
 
             usernameDebounce = new Timer(600) { AutoReset = false };
             usernameDebounce.Elapsed += async (_, _) => await InvokeAsync(ValidateUsername);

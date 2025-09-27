@@ -124,13 +124,13 @@
     <value>Welcome to Our Management Platform </value>
   </data>
   <data name="InstituteManagementTitle" xml:space="preserve">
-    <value>Gym Management </value>
+    <value>Institute Management </value>
   </data>
   <data name="InstituteManagementDesc" xml:space="preserve">
     <value>Tools and features for managing gyms, trainers, and members.</value>
   </data>
   <data name="GymManagementTitle" xml:space="preserve">
-    <value>Institute Management </value>
+    <value>Gym Management </value>
   </data>
   <data name="GymManagementDesc" xml:space="preserve">
     <value>Tools and features for managing educational institutes, teachers, and students.</value>

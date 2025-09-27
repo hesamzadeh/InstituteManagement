@@ -165,4 +165,10 @@
   <data name="ServerError" xml:space="preserve">
     <value>An unexpected error occurred on the server. Please try again later.</value>
   </data>
+  <data name="Gym_OrganizationDisplayName" xml:space="preserve">
+    <value>Gym Name</value>
+  </data>
+  <data name="Institute_OrganizationDisplayName" xml:space="preserve">
+    <value>Institute Name</value>
+  </data>
 </root>

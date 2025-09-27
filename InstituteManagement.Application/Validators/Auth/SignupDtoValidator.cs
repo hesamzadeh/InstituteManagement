@@ -25,6 +25,10 @@ namespace InstituteManagement.Application.Validators.Auth
                 .MinimumLength(5).WithMessage(x => UsernameMinLength.Get(x.Language))
                 .MaximumLength(20).WithMessage(x => UsernameMaxLength.Get(x.Language));
 
+            RuleFor(x => x.DisplayName)
+               .NotEmpty().WithMessage(x => DisplayNameRequired.Get(x.Language))
+               .MaximumLength(50).WithMessage(x => DisplayNameRequired.Get(x.Language));
+
             RuleFor(x => x.NationalityCode)
                 .IsInEnum().WithMessage(x => NationalityCodeRequired.Get(x.Language));
 

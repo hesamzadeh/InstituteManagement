@@ -41,7 +41,8 @@
                 UsernameAlreadyExists,
                 UsernameMinLength,
                 UsernameMaxLength,
-                UsernameRequired
+                UsernameRequired,
+                DisplayNameRequired
             }
         }
     }

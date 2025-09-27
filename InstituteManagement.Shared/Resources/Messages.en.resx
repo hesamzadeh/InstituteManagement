@@ -207,4 +207,7 @@
   <data name="Auth.SignInFailed" xml:space="preserve">
     <value>Signed in Failed.</value>
   </data>
+  <data name="Signup.DisplayNameRequired" xml:space="preserve">
+    <value>DisplayName is required for organization owners.</value>
+  </data>
 </root>

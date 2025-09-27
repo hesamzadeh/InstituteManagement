@@ -1,16 +1,18 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 using InstituteManagement.API.Services;
 using InstituteManagement.Application.Common;
 using InstituteManagement.Core.Entities;
+using InstituteManagement.Core.Entities.Profiles;
 using InstituteManagement.Infrastructure;
 using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.Signup;
+using InstituteManagement.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using FluentValidation.Results;
 
 namespace InstituteManagement.API.Controllers
 {
@@ -91,6 +93,12 @@ namespace InstituteManagement.API.Controllers
             if (existingUser != null)
                 return ValidationError(nameof(dto.UserName), MessageKeys.Signup.Keys.UsernameAlreadyExists.Get(dto.Language));
 
+            if ((dto.InitialRole == ProfileType.Gym_Organization || dto.InitialRole == ProfileType.Institute_Organization)
+            && string.IsNullOrWhiteSpace(dto.DisplayName))
+            {
+                return ValidationError(nameof(dto.InitialRole), MessageKeys.Signup.Keys.DisplayNameRequired.Get(dto.Language));
+            }
+
             // Create Person & User
             var password = GenerateRandomPassword(8);
 
@@ -119,7 +127,7 @@ namespace InstituteManagement.API.Controllers
                 Person = person
             };
 
-            var createResult = await _userManager.CreateAsync(user, password);
+             var createResult = await _userManager.CreateAsync(user, password);
             if (!createResult.Succeeded)
             {
                 var modelState = new ModelStateDictionary();
@@ -133,6 +141,52 @@ namespace InstituteManagement.API.Controllers
             person.AppUserId = user.Id;
             _appDbContext.People.Update(person);
             await _appDbContext.SaveChangesAsync();
+
+            switch (dto.InitialRole)
+            {
+                case ProfileType.Institute_Organization:
+                    var institute = new InstituteProfile
+                    {
+                        PersonId = user.PersonId,
+                        Type = ProfileType.Institute_Organization,
+                        DisplayName = dto.DisplayName
+                    };
+                    _appDbContext.InstituteProfiles.Add(institute);
+                    user.Person.LastUsedProfileId = institute.Id;
+                    await _appDbContext.SaveChangesAsync();
+                    break;
+
+                case ProfileType.Gym_Organization:
+                    var gym = new GymProfile
+                    {
+
+                        PersonId = user.PersonId,
+                        Type = ProfileType.Gym_Organization,
+                        DisplayName = dto.DisplayName
+                    };
+                    _appDbContext.GymProfiles.Add(gym);
+                    user.Person.LastUsedProfileId = gym.Id;
+                    await _appDbContext.SaveChangesAsync();
+                    break;
+
+                case ProfileType.Gym_IndependentTeacher:
+                    var gymTeacher = new GymTeacherProfile
+                    {
+
+                        PersonId = user.PersonId,
+                        Type = ProfileType.Gym_IndependentTeacher,
+                        IsIndependent = true,
+                        DisplayName = string.IsNullOrWhiteSpace(dto.DisplayName)
+                            ? $"{dto.FirstName} {dto.LastName}"
+                            : dto.DisplayName
+                    };
+                    _appDbContext.GymTeacherProfiles.Add(gymTeacher);
+                    user.Person.LastUsedProfileId = gymTeacher.Id;
+                    await _appDbContext.SaveChangesAsync();
+                    break;
+                    // add Teacher, Student, etc.
+            }
+
 
             return Ok(new
             {
