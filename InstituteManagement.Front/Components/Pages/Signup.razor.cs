@@ -1,14 +1,12 @@
-﻿using InstituteManagement.Front.Components.Pages;
+﻿using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.Signup;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
-using System.Net.Http.Json;
-using System.Timers;
+using System.Text.Json;
 using Timer = System.Timers.Timer;
 
 namespace InstituteManagement.Front.Components.Pages
@@ -17,7 +15,7 @@ namespace InstituteManagement.Front.Components.Pages
     {
         [Inject] protected HttpClient Http { get; set; } = default!;
         [Inject] protected IJSRuntime JS { get; set; } = default!;
-        [Inject] protected IStringLocalizer <Signup> L { get; set; } = default!;
+        [Inject] protected UiLocalizer L { get; set; } = default!;
 
         protected SignupDto signup = new() { NationalityCode = NationalityCode.IR };
         protected List<NationalityCode> NationalityOptions =
@@ -27,6 +25,13 @@ namespace InstituteManagement.Front.Components.Pages
         protected ValidationMessageStore messageStore;
         protected bool isSubmitting;
         protected bool SignupSuccess;
+        /// <summary>
+        /// key to use with UiLocalizer at render time (e.g. "Signup.SuccessMessage" or "Signup.ServerError")
+        /// </summary>
+        protected string? responseMessageKey;
+        /// <summary>
+        /// raw server-provided message text (already localized by server possibly)
+        /// </summary>
         protected string responseMessage = "";
         protected string usernameStatus = "";
         protected bool isUsernameTaken = false;
@@ -44,6 +49,11 @@ namespace InstituteManagement.Front.Components.Pages
             editContext.OnFieldChanged += (_, args) =>
             {
                 messageStore.Clear(args.FieldIdentifier);
+
+                // clear global messages when user edits
+                responseMessage = "";
+                responseMessageKey = null;
+
                 StateHasChanged();
             };
 
@@ -56,10 +66,22 @@ namespace InstituteManagement.Front.Components.Pages
             if (firstRender)
             {
                 // preload reCAPTCHA and datepicker
-                await JS.InvokeVoidAsync("getRecaptchaToken");
+                try
+                {
+                    // this will reject if grecaptcha not loaded (we enforce it)
+                    await JS.InvokeAsync<string>("getRecaptchaToken");
+                    _recaptchaLoaded = true;
+                }
+                catch
+                {
+                    _recaptchaLoaded = false;
+                    // Do not call L[...] here — set key for markup to translate
+                    responseMessageKey = "RecaptchaUnavailable";
+                    StateHasChanged();
+                    return;
+                }
 
                 var locale = isFa ? "fa" : "default";
-                _recaptchaLoaded = true;
             }
         }
 
@@ -69,14 +91,27 @@ namespace InstituteManagement.Front.Components.Pages
             isSubmitting = true;
             messageStore.Clear();
 
-            signup.RecaptchaToken = await JS.InvokeAsync<string>("getRecaptchaToken");
+            responseMessage = "";
+            responseMessageKey = null;
+
+            try
+            {
+                signup.RecaptchaToken = await JS.InvokeAsync<string>("getRecaptchaToken");
+            }
+            catch
+            {
+                responseMessageKey = "RecaptchaUnavailable";
+                isSubmitting = false;
+                return;
+            }
+
             signup.Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
             var resp = await Http.PostAsJsonAsync("api/signup", signup);
             if (resp.IsSuccessStatusCode)
             {
                 SignupSuccess = true;
-                responseMessage = L["Signup.SuccessMessage"];
+                responseMessageKey = "SuccessMessage";
             }
             else if (resp.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -87,13 +122,46 @@ namespace InstituteManagement.Front.Components.Pages
                         messageStore.Add(editContext.Field(kv.Key), kv.Value);
                     editContext.NotifyValidationStateChanged();
                 }
+                else
+                {
+                    // fallback – try to read textual message
+                    try
+                    {
+                        var text = await resp.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            // try parse JSON with "message" property
+                            try
+                            {
+                                using var doc = JsonDocument.Parse(text);
+                                if (doc.RootElement.TryGetProperty("message", out var m) && m.ValueKind == JsonValueKind.String)
+                                    responseMessage = m.GetString() ?? "";
+                                else
+                                    responseMessage = text;
+                            }
+                            catch
+                            {
+                                responseMessage = text;
+                            }
+                        }
+                        else
+                        {
+                            responseMessageKey = "ServerError";
+                        }
+                    }
+                    catch
+                    {
+                        responseMessageKey = "ServerError";
+                    }
+                }
             }
             else
             {
-                responseMessage = L["Signup.ServerError"];
+                responseMessageKey = "ServerError";
             }
 
             isSubmitting = false;
+            await InvokeAsync(StateHasChanged);
         }
 
         protected void CheckUsername(FocusEventArgs _) => usernameDebounce.Start();
@@ -101,17 +169,17 @@ namespace InstituteManagement.Front.Components.Pages
         private async Task ValidateUsername()
         {
             isUsernameTaken = false;
+            usernameStatus = "";
 
             if (string.IsNullOrWhiteSpace(signup.UserName))
             {
-                usernameStatus = "";
+                StateHasChanged();
                 return;
             }
 
-            var isAvailable = await Http.GetFromJsonAsync<bool>($"api/signup/check-username?username={signup.UserName}");
+            var isAvailable = await Http.GetFromJsonAsync<bool>($"api/signup/check-username?username={Uri.EscapeDataString(signup.UserName)}");
 
             isUsernameTaken = !isAvailable;
-            usernameStatus = isUsernameTaken ? L["Signup.UsernameTaken"] : ""; // No message if available
 
             StateHasChanged();
         }
@@ -119,7 +187,6 @@ namespace InstituteManagement.Front.Components.Pages
         public void Dispose()
         {
             usernameDebounce?.Dispose();
-
         }
     }
 }

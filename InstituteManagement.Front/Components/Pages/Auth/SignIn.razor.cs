@@ -2,10 +2,8 @@
 using InstituteManagement.Shared.DTOs.Auth;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System.Globalization;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace InstituteManagement.Front.Components.Pages.Auth
@@ -22,7 +20,14 @@ namespace InstituteManagement.Front.Components.Pages.Auth
         protected EditContext? editContext;
         protected ValidationMessageStore? messageStore;
         protected bool isSubmitting;
-        protected string? message;
+        /// <summary>
+        /// localized key to be rendered (use L[responseMessageKey] in markup). Prefer this for localizable messages.
+        /// </summary>
+        protected string? responseMessageKey;
+        /// <summary>
+        /// raw message returned by server or JS exception text (already localized by server if needed)
+        /// </summary>
+        protected string? rawResponseMessage;
         private bool _jsReady;
         protected bool recaptchaFailed;
 
@@ -34,6 +39,12 @@ namespace InstituteManagement.Front.Components.Pages.Auth
             {
                 // clear specific field errors when user edits
                 messageStore?.Clear(args.FieldIdentifier);
+
+                // Also clear any global messages (keys or raw) so user sees fresh state
+                responseMessageKey = null;
+                rawResponseMessage = null;
+                recaptchaFailed = false;
+
                 InvokeAsync(StateHasChanged);
             };
         }
@@ -70,7 +81,8 @@ namespace InstituteManagement.Front.Components.Pages.Auth
         protected async Task HandleSignIn()
         {
             // reset
-            message = null;
+            responseMessageKey = null;
+            rawResponseMessage = null;
             messageStore?.Clear();
             editContext?.NotifyValidationStateChanged();
 
@@ -78,7 +90,8 @@ namespace InstituteManagement.Front.Components.Pages.Auth
 
             if (!_jsReady)
             {
-                message = L["WaitForPageToLoad"];
+                // show localized message in markup: set key, do not call L[...] here
+                responseMessageKey = "WaitForPageToLoad";
                 return;
             }
 
@@ -91,11 +104,10 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                 {
                     model.RecaptchaToken = await JS.InvokeAsync<string>("getRecaptchaToken");
                 }
-                catch
+                catch (Exception)
                 {
-                    // localized key - add to resources:
-                    // "RecaptchaUnavailable"
-                    message = L["RecaptchaUnavailable"];
+                    // set a key — actual localization happens in Razor markup
+                    responseMessageKey = "RecaptchaUnavailable";
                     return;
                 }
 
@@ -108,7 +120,8 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                 }
                 catch (JSException jsex)
                 {
-                    message = L["ClientSignInError"] + ": " + jsex.Message;
+                    // non-localized raw message (JS exceptions are not localized on client)
+                    rawResponseMessage = $"{L["ClientSignInError"]}: {jsex.Message}";
                     return;
                 }
 
@@ -133,14 +146,15 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                                                         .ToArray();
                                 if (messages.Length > 0)
                                     messageStore?.Add(editContext!.Field(fieldName), messages);
+
                                 if (fieldName.Contains("Recaptcha", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    recaptchaFailed = true; // just set flag
+                                    // mark recaptcha failure and let markup show localized text
+                                    recaptchaFailed = true;
                                 }
                             }
 
                             editContext?.NotifyValidationStateChanged();
-
                             return;
                         }
 
@@ -173,12 +187,13 @@ namespace InstituteManagement.Front.Components.Pages.Auth
 
                             if (!string.IsNullOrEmpty(extractedMessage))
                             {
-                                message = extractedMessage;
+                                // server may already localized this message; show raw text
+                                rawResponseMessage = extractedMessage;
                                 return;
                             }
 
                             // nothing found — show the entire object as fallback (safe)
-                            message = body.ToString();
+                            rawResponseMessage = body.ToString();
                             return;
                         }
 
@@ -197,7 +212,7 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                                     {
                                         if (root.TryGetProperty("message", out var m3) && m3.ValueKind == JsonValueKind.String)
                                         {
-                                            message = m3.GetString();
+                                            rawResponseMessage = m3.GetString();
                                             return;
                                         }
                                     }
@@ -207,7 +222,7 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                                     // not JSON — fall through to display raw string
                                 }
 
-                                message = txt;
+                                rawResponseMessage = txt;
                                 return;
                             }
                         }
@@ -217,12 +232,12 @@ namespace InstituteManagement.Front.Components.Pages.Auth
                         // swallow parse errors and fall through to generic message
                     }
 
-                    // final fallback: localized generic message (ensure this key exists in your SignIn resources)
-                    message = L["SignInFailed"];
+                    // final fallback: set a localized key for render-time translation
+                    responseMessageKey = "SignInFailed";
                     return;
                 }
 
-
+                // success
                 AuthStateProvider.NotifyUserAuthentication();
                 Nav.NavigateTo("/", forceLoad: false);
             }

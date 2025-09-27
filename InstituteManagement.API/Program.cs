@@ -5,7 +5,6 @@ using InstituteManagement.API.Services;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Application.Validators.Auth;
 using InstituteManagement.Infrastructure;
-using InstituteManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;

@@ -117,49 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Signup.FormTitle" xml:space="preserve">
+  <data name="FormTitle" xml:space="preserve">
     <value>ایجاد حساب کاربری</value>
   </data>
-  <data name="Signup.FirstName" xml:space="preserve">
+  <data name="FirstName" xml:space="preserve">
     <value>نام</value>
   </data>
-  <data name="Signup.LastName" xml:space="preserve">
+  <data name="LastName" xml:space="preserve">
     <value>نام خانوادگی</value>
   </data>
-  <data name="Signup.UserName" xml:space="preserve">
+  <data name="UserName" xml:space="preserve">
     <value>نام کاربری</value>
   </data>
-  <data name="Signup.Email" xml:space="preserve">
+  <data name="Email" xml:space="preserve">
     <value>ایمیل</value>
   </data>
-  <data name="Signup.Nationality" xml:space="preserve">
+  <data name="Nationality" xml:space="preserve">
     <value>تابعیت</value>
   </data>
-  <data name="Signup.SelectNationality" xml:space="preserve">
+  <data name="SelectNationality" xml:space="preserve">
     <value>انتخاب تابعیت</value>
   </data>
-  <data name="Signup.NationalId" xml:space="preserve">
+  <data name="NationalId" xml:space="preserve">
     <value>کد ملی</value>
   </data>
-  <data name="Signup.Birthdate" xml:space="preserve">
+  <data name="Birthdate" xml:space="preserve">
     <value>تاریخ تولد</value>
   </data>
-  <data name="Signup.BirthdateHint" xml:space="preserve">
+  <data name="BirthdateHint" xml:space="preserve">
     <value> yyyy-MM-dd</value>
   </data>
-  <data name="Signup.Submitting" xml:space="preserve">
+  <data name="Submitting" xml:space="preserve">
     <value>در حال ارسال...</value>
   </data>
-  <data name="Signup.SubmitButton" xml:space="preserve">
+  <data name="SubmitButton" xml:space="preserve">
     <value>ثبت‌نام</value>
   </data>
-  <data name="Signup.SuccessMessage" xml:space="preserve">
+  <data name="SuccessMessage" xml:space="preserve">
     <value>حساب کاربری شما با موفقیت ایجاد شد. لطفاً ایمیل خود را برای تأیید حساب بررسی کنید.</value>
   </data>
-  <data name="Signup.UsernameAvailable" xml:space="preserve">
+  <data name="UsernameAvailable" xml:space="preserve">
     <value>این نام کاربری در دسترس است.</value>
   </data>
-  <data name="Signup.UsernameTaken" xml:space="preserve">
+  <data name="UsernameTaken" xml:space="preserve">
     <value>این نام کاربری در دسترس نیست.</value>
+  </data>
+  <data name="ServerError" xml:space="preserve">
+    <value>خطای غیرمنتظره‌ای در سرور رخ داد. لطفاً بعداً دوباره تلاش کنید.</value>
   </data>
 </root>

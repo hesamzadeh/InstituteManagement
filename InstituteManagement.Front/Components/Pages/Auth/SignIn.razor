@@ -44,14 +44,19 @@
                     </button>
                 </div>
 
-                @if (!string.IsNullOrEmpty(message))
+                @if (!string.IsNullOrEmpty(responseMessageKey))
                 {
-                    <div class="alert alert-danger mt-2">@message</div>
+                    <div class="alert alert-danger mt-2">@L[responseMessageKey]</div>
+                }
+                else if (!string.IsNullOrEmpty(rawResponseMessage))
+                {
+                    <div class="alert alert-danger mt-2">@rawResponseMessage</div>
                 }
                 @if (recaptchaFailed)
                 {
-                    <div class="alert alert-danger mt-2">"Please complete the reCAPTCHA verification."</div>
+                    <div class="alert alert-danger mt-2">@L["RecaptchaTokenRequired"]</div>
                 }
+
             </EditForm>
         </div>
     </div>

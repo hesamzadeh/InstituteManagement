@@ -3,7 +3,6 @@ using InstituteManagement.Core.Common.ValueObjects;
 using InstituteManagement.Core.Entities;
 using InstituteManagement.Core.Entities.Profiles;
 using InstituteManagement.Infrastructure.Data.Configurations;
-using InstituteManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

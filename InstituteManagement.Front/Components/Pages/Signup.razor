@@ -4,27 +4,27 @@
 @using System.Globalization
 @rendermode InteractiveServer
 @inherits SignupBase
-@inject IStringLocalizer<Pages.Signup> L
+@inject UiLocalizer L
 @inject IJSRuntime JSRuntime
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg rounded-3 p-4">
-                <h3 class="mb-4 text-center">@L["Signup.FormTitle"]</h3>
+                <h3 class="mb-4 text-center">@L["FormTitle"]</h3>
                 @if (!SignupSuccess)
                 {
                     <EditForm EditContext="editContext" OnValidSubmit="HandleSignup">
 
                         @* First Name *@
                         <div class="mb-3">
-                            <InputText @bind-Value="signup.FirstName" class="form-control" placeholder="@L["Signup.FirstName"]" />
+                            <InputText @bind-Value="signup.FirstName" class="form-control" placeholder="@L["FirstName"]" />
                             <ValidationMessage For="() => signup.FirstName" />
                         </div>
 
                         @* Last Name *@
                         <div class="mb-3">
-                            <InputText @bind-Value="signup.LastName" class="form-control" placeholder="@L["Signup.LastName"]" />
+                            <InputText @bind-Value="signup.LastName" class="form-control" placeholder="@L["LastName"]" />
                             <ValidationMessage For="() => signup.LastName" />
                         </div>
 
@@ -32,26 +32,26 @@
                         <div class="mb-3">
                             <InputText @bind-Value="signup.UserName"
                                        class=@($"form-control{(isUsernameTaken ? " is-invalid" : "")}")
-                                       placeholder="@L["Signup.UserName"]"
+                                       placeholder="@L["UserName"]"
                                        @onblur="CheckUsername" />                           
                             <ValidationMessage For="() => signup.UserName" />
                             @if (isUsernameTaken)
                             {
-                                <div class="invalid-feedback d-block">@L["Signup.UsernameTaken"]</div>
+                                <div class="invalid-feedback d-block">@L["UsernameTaken"]</div>
                             }
                         </div>
 
                         @* Email *@
                         <div class="mb-3">
-                            <InputText @bind-Value="signup.Email" class="form-control" placeholder="@L["Signup.Email"]" />
+                            <InputText @bind-Value="signup.Email" class="form-control" placeholder="@L["Email"]" />
                             <ValidationMessage For="() => signup.Email" />
                         </div>
 
                         @* Nationality *@
                         <div class="mb-3">
-                            <label class="form-label">@L["Signup.Nationality"]</label>
+                            <label class="form-label">@L["Nationality"]</label>
                             <InputSelect @bind-Value="signup.NationalityCode" class="form-select">
-                                <option value="">— @L["Signup.SelectNationality"] —</option>
+                                <option value="">— @L["SelectNationality"] —</option>
                                 @foreach (var nat in NationalityOptions)
                                 {
                                     <option value="@nat">@nat.GetDisplayName()</option>
@@ -62,13 +62,13 @@
 
                         @* National ID *@
                         <div class="mb-3">
-                            <InputText @bind-Value="signup.NationalId" class="form-control" placeholder="@L["Signup.NationalId"]" />
+                            <InputText @bind-Value="signup.NationalId" class="form-control" placeholder="@L["NationalId"]" />
                             <ValidationMessage For="() => signup.NationalId" />
                         </div>
 
                         @* Birthdate *@
                         <div class="mb-3">
-                            <label class="form-label">@L["Signup.Birthdate"]</label>
+                            <label class="form-label">@L["Birthdate"]</label>
                             <DatePicker @bind-Value="signup.Birthday" Id="birthdate" />
                             <ValidationMessage For="() => signup.Birthday" />
                         </div>
@@ -81,18 +81,22 @@
                                     <span class="spinner-border spinner-border-sm" role="status"></span>
                                     @* &nbsp; *@
 
-                                    @L["Signup.Submitting"]
+                                    @L["Submitting"]
                                 }
                                 else
                                 {
-                                    @L["Signup.SubmitButton"]
+                                    @L["SubmitButton"]
                                 }
                             </button>
                         </div>
                     </EditForm>
-                }                
+                }
 
-                @if (!string.IsNullOrEmpty(responseMessage))
+                @if (!string.IsNullOrEmpty(responseMessageKey))
+                {
+                    <div class="mt-3 alert alert-info">@L[responseMessageKey]</div>
+                }
+                else if (!string.IsNullOrEmpty(responseMessage))
                 {
                     <div class="mt-3 alert alert-info">@responseMessage</div>
                 }
