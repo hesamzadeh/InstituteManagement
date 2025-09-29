@@ -1,0 +1,203 @@
+﻿@page "/profile"
+@using InstituteManagement.Shared
+@using InstituteManagement.Shared.DTOs.UserProfile
+@using Microsoft.Extensions.Localization
+
+<h3>@L["User_Profile"]</h3>
+
+@if (loading)
+{
+    <p><em>@L["Loading"]...</em></p>
+}
+else if (!isAuthenticated)
+{
+    <div class="alert alert-warning">
+        @L["NotSignedIn"] <a href="/signin">@L["SignIn"]</a> @L["ToViewProfile"]
+    </div>
+}
+else if (loadError != null)
+{
+    <div class="alert alert-danger">@loadError</div>
+}
+else if (person == null)
+{
+    <div class="alert alert-secondary">@L["ProfileNotFound"]</div>
+}
+else
+{
+
+    <!-- 🔹 Personal Profile -->
+    <div class="card shadow-sm p-4">
+        <div class="d-flex align-items-center mb-4">
+            <img src="@(!string.IsNullOrEmpty(person.ProfilePictureUrl)
+                                          ? person.ProfilePictureUrl
+                                          : "/images/profiles/profile-pics/default-icon.jpg")"
+             class="rounded-circle me-3"
+             style="width:100px; height:100px; object-fit:cover;" />
+        <div>
+            <h4>@person.FirstName @person.LastName</h4>
+            <p class="text-muted mb-0">@person.NationalityCode</p>
+            <p class="text-muted mb-0">@L["NationalId"]: @person.NationalId</p>
+        </div>
+    </div>
+
+        <hr />
+
+        <!-- 🔹 Account Settings -->
+            <h4>@L["AccountInfo"]</h4>
+
+        @if (accountEditMode)
+            {
+                <EditForm Model="@account" OnValidSubmit="@SaveAccountAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label class="form-label">@L["Email"]</label>
+                        <InputText class="form-control" @bind-Value="account.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@L["PhoneNumber"]</label>
+                        <InputText class="form-control" @bind-Value="account.PhoneNumber" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@L["OldPassword"]</label>
+                        <InputText type="password" class="form-control" @bind-Value="account.CurrentPassword" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@L["NewPassword"]</label>
+                        <InputText type="password" class="form-control" @bind-Value="account.NewPassword" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@L["ConfirmPassword"]</label>
+                        <InputText type="password" class="form-control" @bind-Value="confirmPassword" />
+                        @if (!string.IsNullOrEmpty(confirmPasswordError))
+                        {
+                            <div class="text-danger">@confirmPasswordError</div>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">@L["Save"]</button>
+                    <button type="button" class="btn btn-secondary ms-2" @onclick="() => accountEditMode = false">@L["Cancel"]</button>
+                </EditForm>
+            }
+            else
+            {            
+                <dl class="row">
+                    <dt class="col-sm-3">@L["Email"]</dt>
+                    <dd class="col-sm-9">@account.Email</dd>
+
+                    <dt class="col-sm-3">@L["PhoneNumber"]</dt>
+                    <dd class="col-sm-9">@account.PhoneNumber</dd>
+                </dl>
+
+                <button class="btn btn-outline-primary" @onclick="() => accountEditMode = true">@L["EditAccount"]</button>
+            }
+        <hr />
+        <h4>@L["PersonalInfo"]</h4>
+    @if (editMode)
+        {
+            <EditForm Model="@person" OnValidSubmit="@SaveProfileAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">@L["FirstName"]</label>
+                    <InputText class="form-control" @bind-Value="person.FirstName" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["LastName"]</label>
+                    <InputText class="form-control" @bind-Value="person.LastName" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["Birthday"]</label>
+                    <InputDate class="form-control" @bind-Value="person.Birthday" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["Country"]</label>
+                    <InputText class="form-control" @bind-Value="person.Country" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["Province"]</label>
+                    <InputText class="form-control" @bind-Value="person.Province" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["City"]</label>
+                    <InputText class="form-control" @bind-Value="person.City" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["FullAddress"]</label>
+                    <InputTextArea class="form-control" @bind-Value="person.FullAddress" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["PostalCode"]</label>
+                    <InputText class="form-control" @bind-Value="person.PostalCode" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">@L["Save"]</button>
+                <button type="button" class="btn btn-secondary ms-2" @onclick="() => editMode = false">@L["Cancel"]</button>
+            </EditForm>
+        }
+        else
+        {
+            <dl class="row">
+                <dt class="col-sm-3">@L["FirstName"]</dt>
+                <dd class="col-sm-9">@person.FirstName</dd>
+
+                <dt class="col-sm-3">@L["LastName"]</dt>
+                <dd class="col-sm-9">@person.LastName</dd>
+
+                <dt class="col-sm-3">@L["Birthday"]</dt>
+                <dd class="col-sm-9">@person.Birthday?.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-3">@L["Country"]</dt>
+                <dd class="col-sm-9">@person.Country</dd>
+
+                <dt class="col-sm-3">@L["Province"]</dt>
+                <dd class="col-sm-9">@person.Province</dd>
+
+                <dt class="col-sm-3">@L["City"]</dt>
+                <dd class="col-sm-9">@person.City</dd>
+
+                <dt class="col-sm-3">@L["FullAddress"]</dt>
+                <dd class="col-sm-9">@person.FullAddress</dd>
+
+                <dt class="col-sm-3">@L["PostalCode"]</dt>
+                <dd class="col-sm-9">@person.PostalCode</dd>
+
+                <dt class="col-sm-3">@L["Status"]</dt>
+                <dd class="col-sm-9">
+                    @if (person.IsVerified)
+                    {
+                        <span class="badge bg-success">@L["Verified"]</span>
+                    }
+                    else if (person.IsVerificationLocked)
+                    {
+                        <span class="badge bg-warning text-dark">@L["PendingVerification"]</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@L["Draft"]</span>
+                    }
+                </dd>
+            </dl>
+
+            @if (!person.IsVerified && !person.IsVerificationLocked)
+            {
+                <button class="btn btn-outline-primary me-2" @onclick="() => editMode = true">@L["EditProfile"]</button>
+                <button class="btn btn-success" @onclick="RequestValidationAsync">@L["RequestValidation"]</button>
+            }
+        }
+    </div>
+}

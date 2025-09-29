@@ -30,6 +30,7 @@ namespace InstituteManagement.Infrastructure
             // Apply Profile Configurations
 
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonDocumentConfiguration());
             modelBuilder.ApplyConfiguration(new GymProfileConfiguration());
             modelBuilder.ApplyConfiguration(new GymStudentProfileConfiguration());
             modelBuilder.ApplyConfiguration(new GymTeacherProfileConfiguration());

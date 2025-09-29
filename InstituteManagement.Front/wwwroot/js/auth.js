@@ -84,6 +84,39 @@
             }
         },
 
+        get: async function (url) {
+            const full = this._toUrl(url);
+            try {
+                const res = await fetch(full, { method: 'GET', credentials: 'include' });
+                const txt = await res.text();
+                let body;
+                try { body = JSON.parse(txt); } catch { body = txt; }
+                return { ok: res.ok, status: res.status, body };
+            } catch (err) {
+                return { ok: false, status: 0, error: err && err.message ? err.message : String(err) };
+            }
+        },
+
+        put: async function (url, payload) {
+            const full = this._toUrl(url);
+            try {
+                const res = await fetch(full, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+
+                const txt = await res.text();
+                let body;
+                try { body = JSON.parse(txt); } catch { body = txt; }
+
+                return { ok: res.ok, status: res.status, body };
+            } catch (err) {
+                return { ok: false, status: 0, error: err && err.message ? err.message : String(err) };
+            }
+        },
+
         // culture helpers (used by NavMenu earlier)
         setCulture: function (code) {
             try {

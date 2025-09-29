@@ -117,121 +117,97 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Signup.BirthdayMustBeInPast" xml:space="preserve">
-    <value>Birthday must be in the past.</value>
+  <data name="Loading" xml:space="preserve">
+    <value>در حال بارگذاری</value>
   </data>
-  <data name="Signup.CaptchaFailed" xml:space="preserve">
-    <value>reCAPTCHA verification failed.</value>
+  <data name="NotSignedIn" xml:space="preserve">
+    <value>وارد نشده‌اید</value>
   </data>
-  <data name="Signup.EmailFormatInvalid" xml:space="preserve">
-    <value>Email format is invalid.</value>
+  <data name="SignIn" xml:space="preserve">
+    <value>ورود</value>
   </data>
-  <data name="Signup.EmailRequired" xml:space="preserve">
-    <value>Email is required.</value>
+  <data name="ProfileNotFound" xml:space="preserve">
+    <value>پروفایل یافت نشد</value>
   </data>
-  <data name="Signup.FirstNameMaxLength" xml:space="preserve">
-    <value>First name must be at most 50 characters.</value>
+  <data name="ToViewProfile" xml:space="preserve">
+    <value>برای مشاهده پروفایل</value>
   </data>
-  <data name="Signup.FirstNameRequired" xml:space="preserve">
-    <value>First name is required.</value>
+  <data name="User_Profile" xml:space="preserve">
+    <value>پروفایل کاربر</value>
   </data>
-  <data name="Signup.InvalidNationalId" xml:space="preserve">
-    <value>National ID is invalid.</value>
+  <data name="NationalId" xml:space="preserve">
+    <value>کد ملی</value>
   </data>
-  <data name="Signup.LastNameMaxLength" xml:space="preserve">
-    <value>Last name must be at most 50 characters.</value>
+  <data name="AccountInfo" xml:space="preserve">
+    <value>اطلاعات حساب</value>
   </data>
-  <data name="Signup.LastNameRequired" xml:space="preserve">
-    <value>Last name is required.</value>
+  <data name="Email" xml:space="preserve">
+    <value>ایمیل</value>
   </data>
-  <data name="Signup.NationalIdAlreadyExists" xml:space="preserve">
-    <value>This National ID already exists.</value>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>شماره تلفن</value>
   </data>
-  <data name="Signup.NationalIdMustBe10Digits" xml:space="preserve">
-    <value>National ID must be exactly 10 digits.</value>
+  <data name="OldPassword" xml:space="preserve">
+    <value>رمز عبور فعلی</value>
   </data>
-  <data name="Signup.NationalIdRequired" xml:space="preserve">
-    <value>National ID is required.</value>
+  <data name="NewPassword" xml:space="preserve">
+    <value>رمز عبور جدید</value>
   </data>
-  <data name="Signup.NationalityCodeRequired" xml:space="preserve">
-    <value>Nationality code is required.</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>تکرار رمز عبور</value>
   </data>
-  <data name="Signup.PersonSaveError" xml:space="preserve">
-    <value>Could not save person data.</value>
+  <data name="Save" xml:space="preserve">
+    <value>ذخیره</value>
   </data>
-  <data name="Signup.RecaptchaTokenRequired" xml:space="preserve">
-    <value>reCAPTCHA token is required.</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>لغو</value>
   </data>
-  <data name="Signup.SignupSuccess" xml:space="preserve">
-    <value>Signup completed successfully.</value>
+  <data name="EditAccount" xml:space="preserve">
+    <value>ویرایش حساب</value>
   </data>
-  <data name="Signup.UnexpectedError" xml:space="preserve">
-    <value>An unexpected error occurred. Please try again.</value>
+  <data name="PersonalInfo" xml:space="preserve">
+    <value>اطلاعات شخصی</value>
   </data>
-  <data name="Signup.UserCreationFailed" xml:space="preserve">
-    <value>Failed to create user.</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>نام</value>
   </data>
-  <data name="Signup.UsernameAlreadyExists" xml:space="preserve">
-    <value>This username already exists.</value>
+  <data name="LastName" xml:space="preserve">
+    <value>نام خانوادگی</value>
   </data>
-  <data name="Signup.UsernameMaxLength" xml:space="preserve">
-    <value>Username must be at most 20 characters.</value>
+  <data name="Birthday" xml:space="preserve">
+    <value>تاریخ تولد</value>
   </data>
-  <data name="Signup.UsernameRequired" xml:space="preserve">
-    <value>Username is required.</value>
+  <data name="Country" xml:space="preserve">
+    <value>کشور</value>
   </data>
-  <data name="Signup.UsernameMinLength" xml:space="preserve">
-    <value>Username must be at least 5 characters.</value>
+  <data name="Province" xml:space="preserve">
+    <value>استان</value>
   </data>
-  <data name="Auth.UsernameOrEmailRequired" xml:space="preserve">
-    <value>Please enter your username or email.</value>
+  <data name="City" xml:space="preserve">
+    <value>شهر</value>
   </data>
-  <data name="Auth.UsernameOrEmailMaxLength" xml:space="preserve">
-    <value>Username or email must be at most 100 characters.</value>
+  <data name="FullAddress" xml:space="preserve">
+    <value>آدرس کامل</value>
   </data>
-  <data name="Auth.PasswordRequired" xml:space="preserve">
-    <value>Please enter your password.</value>
+  <data name="PostalCode" xml:space="preserve">
+    <value>کد پستی</value>
   </data>
-  <data name="Auth.PasswordMinLength" xml:space="preserve">
-    <value>Password must be at least 6 characters.</value>
+  <data name="Status" xml:space="preserve">
+    <value>وضعیت</value>
   </data>
-  <data name="Auth.RecaptchaTokenRequired" xml:space="preserve">
-    <value>Please complete the reCAPTCHA verification.</value>
+  <data name="Verified" xml:space="preserve">
+    <value>تأیید شده</value>
   </data>
-  <data name="Auth.InvalidCredentials" xml:space="preserve">
-    <value>Invalid username or password.</value>
+  <data name="PendingVerification" xml:space="preserve">
+    <value>در انتظار تأیید</value>
   </data>
-  <data name="Auth.SignInSuccess" xml:space="preserve">
-    <value>Signed in successfully.</value>
+  <data name="Draft" xml:space="preserve">
+    <value>پیش‌نویس</value>
   </data>
-  <data name="Auth.SignInFailed" xml:space="preserve">
-    <value>Signed in Failed.</value>
+  <data name="EditProfile" xml:space="preserve">
+    <value>ویرایش پروفایل</value>
   </data>
-  <data name="Signup.DisplayNameRequired" xml:space="preserve">
-    <value>DisplayName is required for organization owners.</value>
-  </data>
-  <data name="UpdateAccount.RecaptchaTokenRequired" xml:space="preserve">
-    <value>Recaptcha is required.</value>
-  </data>
-  <data name="UpdateAccount.EmailInvalid" xml:space="preserve">
-    <value>Invalid email format.</value>
-  </data>
-  <data name="UpdateAccount.PhoneInvalid" xml:space="preserve">
-    <value>Invalid phone number format.</value>
-  </data>
-  <data name="UpdateAccount.PasswordMinLength" xml:space="preserve">
-    <value>Password must be at least 8 characters long.</value>
-  </data>
-  <data name="UpdateAccount.PasswordUppercaseRequired" xml:space="preserve">
-    <value>Password must contain at least one uppercase letter.</value>
-  </data>
-  <data name="UpdateAccount.PasswordLowercaseRequired" xml:space="preserve">
-    <value>Password must contain at least one lowercase letter.</value>
-  </data>
-  <data name="UpdateAccount.PasswordDigitRequired" xml:space="preserve">
-    <value>Password must contain at least one digit.</value>
-  </data>
-  <data name="UpdateAccount.PasswordSpecialRequired" xml:space="preserve">
-    <value>Password must contain at least one special character.</value>
+  <data name="RequestValidation" xml:space="preserve">
+    <value>درخواست تأیید</value>
   </data>
 </root>

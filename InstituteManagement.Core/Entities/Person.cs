@@ -50,8 +50,21 @@ namespace InstituteManagement.Core.Entities
         public bool IsEnabled { get; set; } = true;
 
         public bool IsLocked { get; set; } = false;
+        /// <summary>
+        /// Indicates whether profile verification is locked (user requested verification).
+        /// </summary>
+        public bool IsVerificationLocked { get; set; } = false;
+
+        /// <summary>
+        /// Date/time when user requested verification (null if never requested).
+        /// </summary>
+        public DateTime? VerificationRequestedAt { get; set; }
+
+        // Navigation: uploaded identity documents
+        public ICollection<PersonDocument> Documents { get; set; } = new List<PersonDocument>();
         // Relationships
         public ICollection<Profile> Profiles { get; set; } = [];
+
     }
 
 }

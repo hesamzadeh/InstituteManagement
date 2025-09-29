@@ -90,6 +90,11 @@ namespace InstituteManagement.Infrastructure.Data.Configurations
                 address.Property(a => a.Longitude)
                        .HasColumnName("Longitude");
             });
+
+            builder.HasMany(p => p.Documents)
+               .WithOne(d => d.Person)
+               .HasForeignKey(d => d.PersonId)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

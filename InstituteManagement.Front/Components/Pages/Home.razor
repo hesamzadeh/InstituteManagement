@@ -3,6 +3,7 @@
 @using InstituteManagement.Shared.Enums
 @using Microsoft.Extensions.Localization
 @inject NavigationManager Nav
+@inject HttpClient Http
 @inject UiLocalizer L
 @code {
     protected override void OnInitialized()
@@ -38,7 +39,7 @@
                         @L["RegisterAsIndependentTeacher"]
                     </button>
 
-                    <button class="btn btn-outline-secondary m-1"
+@*                     <button class="btn btn-outline-secondary m-1"
                             @onclick="@(() => GoToInviteSignup(ProfileType.Institute_Teacher))">
                         @L["RegisterAsInstituteTeacher"]
                     </button>
@@ -46,7 +47,7 @@
                     <button class="btn btn-outline-primary m-1"
                             @onclick="@(() => GoToInviteSignup(ProfileType.Institute_Student))">
                         @L["RegisterAsStudent"]
-                    </button>
+                    </button> *@
                 </div>
             </div>
         </div>
@@ -68,7 +69,7 @@
                         @L["RegisterAsIndependentTrainer"]
                     </button>
 
-                    <button class="btn btn-outline-secondary m-1"
+@*                     <button class="btn btn-outline-secondary m-1"
                             @onclick="@(() => GoToInviteSignup(ProfileType.Gym_Teacher))">
                         @L["RegisterAsGymTrainer"]
                     </button>
@@ -76,12 +77,96 @@
                     <button class="btn btn-outline-primary m-1"
                             @onclick="@(() => GoToInviteSignup(ProfileType.Gym_Student))">
                         @L["RegisterAsMember"]
-                    </button>
+                    </button> *@
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<h3>Gyms</h3>
+
+@if (gyms == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var inst in gyms)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <img src="@inst.LogoUrl" class="card-img-top" alt="@inst.DisplayName" />
+                    <div class="card-body">
+                        <h5 class="card-title">@inst.DisplayName</h5>
+                        <button class="btn btn-primary me-2" @onclick="() => Register(ProfileType.Gym_Teacher, inst.Id)">
+                            Register as Teacher
+                        </button>
+                        <button class="btn btn-secondary" @onclick="() => Register(ProfileType.Gym_Student, inst.Id)">
+                            Register as Student
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+<h3>Institutes</h3>
+
+@if (institutes == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var inst in institutes)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <img src="@inst.LogoUrl" class="card-img-top" alt="@inst.DisplayName" />
+                    <div class="card-body">
+                        <h5 class="card-title">@inst.DisplayName</h5>
+                        <button class="btn btn-primary me-2" @onclick="() => Register(ProfileType.Institute_Teacher, inst.Id)">
+                            Register as Teacher
+                        </button>
+                        <button class="btn btn-secondary" @onclick="() => Register(ProfileType.Institute_Teacher, inst.Id)">
+                            Register as Student
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<BusinessDto>? gyms;
+    private List<BusinessDto>? institutes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gyms = await Http.GetFromJsonAsync<List<BusinessDto>>("api/businesses/gyms");
+        institutes = await Http.GetFromJsonAsync<List<BusinessDto>>("api/businesses/institutes");
+    }
+
+    private string teacher = "teacher";
+    private string student = "student";
+
+    private async Task Register(ProfileType role, Guid id)
+    {
+        Nav.NavigateTo($"/signup?role={role.ToString()}");
+
+    }
+
+    public class BusinessDto
+    {
+        public Guid Id { get; set; }
+        public string DisplayName { get; set; } = string.Empty;
+        public string? LogoUrl { get; set; }
+    }
+}
 
 @code {
     private void GoToSignup(ProfileType role)

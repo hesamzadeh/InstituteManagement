@@ -45,5 +45,20 @@
                 DisplayNameRequired
             }
         }
+
+        public static class UpdateAccount
+        {
+            public enum Keys
+            {
+                RecaptchaTokenRequired,
+                EmailInvalid,
+                PhoneInvalid,
+                PasswordMinLength,
+                PasswordUppercaseRequired,
+                PasswordLowercaseRequired,
+                PasswordDigitRequired,
+                PasswordSpecialRequired
+            }
+        }
     }
 }

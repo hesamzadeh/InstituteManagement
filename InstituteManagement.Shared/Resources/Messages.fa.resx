@@ -210,4 +210,28 @@
   <data name="Signup.DisplayNameRequired" xml:space="preserve">
     <value>وارد کردن نام سازمان الزامی است.</value>
   </data>
+  <data name="UpdateAccount.RecaptchaTokenRequired" xml:space="preserve">
+    <value>تأیید کپچا الزامی است.</value>
+  </data>
+  <data name="UpdateAccount.EmailInvalid" xml:space="preserve">
+    <value>فرمت ایمیل نامعتبر است.</value>
+  </data>
+  <data name="UpdateAccount.PhoneInvalid" xml:space="preserve">
+    <value>فرمت شماره تلفن نامعتبر است.</value>
+  </data>
+  <data name="UpdateAccount.PasswordMinLength" xml:space="preserve">
+    <value>رمز عبور باید حداقل ۸ کاراکتر باشد.</value>
+  </data>
+  <data name="UpdateAccount.PasswordUppercaseRequired" xml:space="preserve">
+    <value>رمز عبور باید حداقل یک حرف بزرگ داشته باشد.</value>
+  </data>
+  <data name="UpdateAccount.PasswordLowercaseRequired" xml:space="preserve">
+    <value>رمز عبور باید حداقل یک حرف کوچک داشته باشد.</value>
+  </data>
+  <data name="UpdateAccount.PasswordDigitRequired" xml:space="preserve">
+    <value>رمز عبور باید حداقل یک عدد داشته باشد.</value>
+  </data>
+  <data name="UpdateAccount.PasswordSpecialRequired" xml:space="preserve">
+    <value>رمز عبور باید حداقل یک کاراکتر خاص داشته باشد.</value>
+  </data>
 </root>
