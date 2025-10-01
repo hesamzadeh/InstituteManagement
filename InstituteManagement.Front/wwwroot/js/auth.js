@@ -57,7 +57,23 @@
             }
         },
 
-        // whoami -> returns whatever the API returned (normalized keys)
+        postForm: async function (url, formData) {
+            const full = this._toUrl(url);
+            try {
+                const res = await fetch(full, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+
+                const txt = await res.text(); // API returns string (image URL)
+                return { ok: res.ok, status: res.status, body: txt };
+            } catch (err) {
+                return { ok: false, status: 0, error: err && err.message ? err.message : String(err) };
+            }
+        },
+
+        // whoami -> returns API payload plus normalized core properties
         whoami: async function (url) {
             const full = this._toUrl(url);
             try {
@@ -66,7 +82,7 @@
 
                 const payload = await res.json();
 
-                // Normalize common property names and include FullName normalization
+                // Normalize core properties but keep everything else
                 const isAuthenticated =
                     payload.IsAuthenticated ?? payload.isAuthenticated ?? payload.authenticated ?? false;
                 const username =
@@ -75,6 +91,7 @@
                     payload.FullName ?? payload.fullName ?? payload.displayName ?? '';
 
                 return {
+                    ...payload, // include everything server returned
                     IsAuthenticated: Boolean(isAuthenticated),
                     Username: String(username),
                     FullName: String(fullName)
@@ -83,6 +100,7 @@
                 return { IsAuthenticated: false, Username: '', FullName: '' };
             }
         },
+
 
         get: async function (url) {
             const full = this._toUrl(url);

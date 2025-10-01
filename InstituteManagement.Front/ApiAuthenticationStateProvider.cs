@@ -20,35 +20,40 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
         try
         {
-            // call browser fetch via JS helper to include cookies
             var res = await _js.InvokeAsync<JsonElement>("appAuth.whoami", "/api/auth/whoami");
-            if (res.ValueKind == JsonValueKind.Object)
+            if (res.ValueKind == JsonValueKind.Object && res.GetProperty("IsAuthenticated").GetBoolean())
             {
-                var isAuthenticated = res.GetProperty("IsAuthenticated").GetBoolean();
-                if (isAuthenticated)
-                {
-                    var username = res.GetProperty("Username").GetString() ?? "";
-                    var fullName = res.GetProperty("FullName").GetString() ?? "";
-                    var claims = new List<Claim>
-                {
-                    // Put human-friendly full name into ClaimTypes.Name
-                    new Claim(ClaimTypes.Name, fullName),
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, res.GetProperty("FullName").GetString() ?? ""),
+                new Claim(ClaimTypes.Upn, res.GetProperty("Username").GetString() ?? "")
+            };
 
-                    // Keep original username in UPN (useful to find the login)
-                    new Claim(ClaimTypes.Upn, username)
-                };
-                    var identity = new ClaimsIdentity(claims, "apiauth");
-                    return new AuthenticationState(new ClaimsPrincipal(identity));
-                }
+                // optional additional claims
+                if (res.TryGetProperty("profilePictureUrl", out var pic))
+                    claims.Add(new Claim("ProfilePictureUrl", pic.GetString() ?? ""));
+
+                if (res.TryGetProperty("firstName", out var fn))
+                    claims.Add(new Claim("FirstName", fn.GetString() ?? ""));
+
+                if (res.TryGetProperty("lastName", out var ln))
+                    claims.Add(new Claim("LastName", ln.GetString() ?? ""));
+
+                if (res.TryGetProperty("lastUsedProfileId", out var lpid))
+                    claims.Add(new Claim("LastUsedProfileId", lpid.GetString() ?? ""));
+
+                var identity = new ClaimsIdentity(claims, "apiauth");
+                return new AuthenticationState(new ClaimsPrincipal(identity));
             }
         }
         catch
         {
-            // ignore - return anonymous
+            // ignore
         }
 
         return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
     }
+
 
     public void NotifyUserAuthentication() =>
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

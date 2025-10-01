@@ -3,13 +3,14 @@ using FluentValidation;
 using FluentValidation.Results;
 using InstituteManagement.API.Services;
 using InstituteManagement.Infrastructure.Persistence;
-using InstituteManagement.Shared.DTOs.Signup;
 using InstituteManagement.Shared.DTOs.UserProfile;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using System.Security.Claims;
 
 namespace InstituteManagement.API.Controllers
 {
@@ -18,6 +19,7 @@ namespace InstituteManagement.API.Controllers
     [Authorize]
     public class UserProfileController : AppControllerBase
     {
+        private readonly IWebHostEnvironment _env;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
@@ -29,13 +31,16 @@ namespace InstituteManagement.API.Controllers
             IMapper mapper,
             AppDbContext appDbContext,
             ICaptchaValidator captchaValidator,
-            IValidator<UpdateAccountDto> validator)
+            IValidator<UpdateAccountDto> validator,
+            IWebHostEnvironment env
+            )
         {
             _userManager = userManager;
             _mapper = mapper;
             _appDbContext = appDbContext;
             _captchaValidator = captchaValidator;
             _validator = validator;
+            _env = env;
         }
        
         [HttpGet("me")]
@@ -147,6 +152,79 @@ namespace InstituteManagement.API.Controllers
             };
 
             return Ok(dto);
+        }
+
+        [HttpGet("profile-pic/{personId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProfilePic(Guid personId)
+        {
+            var person = await _appDbContext.People.FindAsync(personId);
+            if (person == null)
+                return NotFound();
+
+            var fileName = $"{person.AppUserId}.jpg";
+            var profilePath = Path.Combine(
+                _env.WebRootPath, "images", "profiles", "profile-pics", fileName
+            );
+
+            if (!System.IO.File.Exists(profilePath))
+            {
+                var defaultPath = Path.Combine(
+                    _env.WebRootPath, "images", "profiles", "profile-pics", "default-icon.jpg"
+                );
+                return PhysicalFile(defaultPath, "image/jpeg");
+            }
+
+            return PhysicalFile(profilePath, "image/jpeg");
+        }
+
+
+
+        [HttpPost("upload-profile-pic")]
+        public async Task<IActionResult> UploadProfilePic(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            // Validate size (max 2MB)
+            if (file.Length > 2 * 1024 * 1024)
+                return BadRequest("File too large. Max 2MB allowed.");
+
+            //var userId = User.FindFirst("sub")?.Value ?? User.Identity?.Name;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var uploadsPath = Path.Combine(_env.WebRootPath, "images", "profiles", "profile-pics");
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
+
+            var fileName = $"{userId}.jpg";
+            var filePath = Path.Combine(uploadsPath, fileName);
+
+            // Process image with ImageSharp
+            using var image = await Image.LoadAsync(file.OpenReadStream());
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Mode = ResizeMode.Crop,
+                Size = new Size(512, 512)
+            }));
+
+            await image.SaveAsJpegAsync(filePath);
+
+            // Build relative URL (for <img src>)
+            var relativeUrl = $"/images/profiles/profile-pics/{fileName}";
+
+            // Update DB
+            var person = await _appDbContext.People.FirstOrDefaultAsync(p => p.AppUserId == Guid.Parse(userId));
+            if (person == null) return NotFound();
+
+            person.ProfilePictureUrl = relativeUrl;
+            await _appDbContext.SaveChangesAsync();
+
+            // Return URL to frontend
+            return Ok(relativeUrl);
         }
     }
 }

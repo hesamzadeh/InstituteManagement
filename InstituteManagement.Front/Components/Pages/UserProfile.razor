@@ -2,6 +2,8 @@
 @using InstituteManagement.Shared
 @using InstituteManagement.Shared.DTOs.UserProfile
 @using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
+@inject IOptions<ApiSettings> ApiOptions
 
 <h3>@L["User_Profile"]</h3>
 
@@ -26,20 +28,32 @@ else if (person == null)
 else
 {
     <!-- 🔹 Personal Profile -->
-    <div class="card shadow-sm p-4">
-        <div class="d-flex align-items-center mb-4">
-            <img src="@(!string.IsNullOrEmpty(person.ProfilePictureUrl)
-                                                           ? person.ProfilePictureUrl
-                                                           : "/images/profiles/profile-pics/default-icon.jpg")"
-             class="rounded-circle me-3"
-             style="width:100px; height:100px; object-fit:cover;" />
-        <div>
-            <h4>@person.FirstName @person.LastName</h4>
-            <p class="text-muted mb-0">@person.NationalityCode</p>
-            <p class="text-muted mb-0">@L["NationalId"]: @person.NationalId</p>
-            <p class="text-muted mb-0">@L["UserName"]: @account.UserName</p>
+    <div class="card shadow-sm p-4" style="margin:auto;">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="position-relative">
+                <!-- Profile Picture -->
+                <img src="@($"{ApiOptions.Value.BaseUrl}/api/UserProfile/profile-pic/{person.Id}")"
+                     alt="Profile Picture"
+                     class="rounded-circle border"
+                     style="width:120px; height:120px; object-fit:cover;" />
+
+                <!-- Hover overlay button -->
+                <label class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-2"
+                       style="cursor:pointer; transform: translate(25%, 25%);"
+                       title="@L["ChangeProfilePicture"]">
+                    <InputFile OnChange="UploadProfilePic" accept="image/*" class="d-none" />
+                    <i class="bi bi-camera-fill text-white"></i>
+                </label>
+            </div>
+
+            <!-- Personal info -->
+            <div>
+                <h4 class="mb-1">@person.FirstName @person.LastName</h4>
+                <p class="text-muted mb-0">@person.NationalityCode</p>
+                <p class="text-muted mb-0">@L["NationalId"]: @person.NationalId</p>
+                <p class="text-muted mb-0">@L["UserName"]: @account.UserName</p>
+            </div>
         </div>
-    </div>
 
         <hr />
 

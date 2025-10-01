@@ -11,8 +11,4 @@
     <ProjectReference Include="..\InstituteManagement.Shared\InstituteManagement.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\profiles\profile-pics\" />
-  </ItemGroup>
-
 </Project>

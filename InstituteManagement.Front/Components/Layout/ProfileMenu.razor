@@ -1,11 +1,7 @@
 ﻿@using System.Security.Claims
 @using InstituteManagement.Shared
+@using Microsoft.Extensions.Options
 @using System.Text.Json
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager Nav
-@inject IJSRuntime JS
-@inject ApiAuthenticationStateProvider ApiAuthStateProvider
-@inject UiLocalizer L
 
 <div class="profile-root d-flex align-items-center">
     <AuthorizeView>
@@ -17,7 +13,6 @@
                     <img src="@ProfilePictureOrPlaceholder" class="rounded-circle profile-avatar" alt="avatar" />
                 </button>
 
-                @* Hover card (small) *@
                 @if (showHover)
                 {
                     <div class="card profile-hover shadow-sm">
@@ -42,7 +37,6 @@
     </AuthorizeView>
 </div>
 
-@* Sidebar overlay *@
 @if (isSidebarOpen)
 {
     <div class="profile-sidebar-overlay" @onclick="CloseSidebar"></div>
@@ -60,13 +54,11 @@
         <hr />
 
         <div class="sidebar-links">
-            <!-- always-visible: Profile -->
             <a class="sidebar-link" href="/profile">
                 <i class="bi bi-person"></i>
                 <span>@L["MyProfile"]</span>
             </a>
 
-            <!-- conditional items -->
             @if (IsAuthenticated)
             {
                 <a class="sidebar-link" href="/settings"><i class="bi bi-gear"></i> <span>@L["Settings"]</span></a>
@@ -74,13 +66,11 @@
                 <hr />
             }
 
-            <!-- language selector (always shown) -->
             <div class="sidebar-row">
                 <label class="form-label mb-1 small">@L["Language"]</label>
                 <LanguageSelector />
             </div>
 
-            <!-- theme toggle (always shown) -->
             <div class="sidebar-row mt-2">
                 <label class="form-label mb-1 small">@L["Theme"]</label>
                 <div class="d-flex align-items-center gap-2">
@@ -104,94 +94,4 @@
             </div>
         </div>
     </div>
-}
-@code {
-    private bool showHover;
-    private bool isSidebarOpen;
-    private bool isDark;
-
-    private ClaimsPrincipal? user;
-    private bool IsAuthenticated => user?.Identity?.IsAuthenticated ?? false;
-
-    // extracted claims
-    private string UserName => GetClaim(ClaimTypes.Upn) ?? GetClaim("preferred_username") ?? "";
-    private string FullName => GetClaim(ClaimTypes.Name) ?? GetClaim("FullName") ?? UserName;
-    private string Email => GetClaim(ClaimTypes.Email) ?? "";
-    private string ProfilePictureOrPlaceholder => GetClaim("ProfilePictureUrl") ?? "/images/profiles/profile-pics/default-icon.jpg";
-    private string LastUsedProfileId => GetClaim("LastUsedProfileId") ?? "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadUserAsync();
-
-        // optionally detect persisted theme
-        try
-        {
-            isDark = await JS.InvokeAsync<bool>("profileMenu.getSavedTheme");
-            await ApplyTheme(isDark);
-        }
-        catch { }
-    }
-
-    private async Task LoadUserAsync()
-    {
-        var auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        user = auth.User;
-
-        // If you use a specialized ApiAuthenticationStateProvider that notifies on login/logout,
-        // Subscribe to its AuthenticationStateChanged event if necessary to auto-update.
-    }
-
-    private string? GetClaim(string type)
-    {
-        return user?.FindFirst(type)?.Value;
-    }
-
-    private void ToggleSidebar()
-    {
-        isSidebarOpen = !isSidebarOpen;
-    }
-
-    private void CloseSidebar()
-    {
-        isSidebarOpen = false;
-    }
-
-    private async Task ToggleTheme(ChangeEventArgs e)
-    {
-        isDark = (bool)e.Value;
-        await ApplyTheme(isDark);
-    }
-
-    private async Task ApplyTheme(bool dark)
-    {
-        try
-        {
-            await JS.InvokeVoidAsync("profileMenu.setTheme", dark ? "dark" : "light");
-        }
-        catch { }
-    }
-
-    private async Task Logout()
-    {
-        try
-        {
-            var res = await JS.InvokeAsync<JsonElement>("appAuth.post", "/api/auth/logout");
-            var ok = res.GetProperty("ok").GetBoolean();
-            if (ok)
-            {
-                // notify your ApiAuthenticationStateProvider or refresh authentication state
-                if (ApiAuthStateProvider != null)
-                    ApiAuthStateProvider.NotifyUserLogout();
-                else
-                    await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-                Nav.NavigateTo("/", forceLoad: true);
-            }
-        }
-        catch
-        {
-            Nav.NavigateTo("/logout", forceLoad: true);
-        }
-    }
 }

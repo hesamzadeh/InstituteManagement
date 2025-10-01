@@ -19,17 +19,20 @@ namespace InstituteManagement.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ICaptchaValidator _captchaValidator;
         private readonly IValidator<SignInDto> _validator;
+        private readonly IUserClaimsPrincipalFactory<AppUser> _claimsFactory;
 
         public AuthController(
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             ICaptchaValidator captchaValidator,
-            IValidator<SignInDto> validator)
+            IValidator<SignInDto> validator,
+            IUserClaimsPrincipalFactory<AppUser> claimsFactory)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _captchaValidator = captchaValidator;
             _validator = validator;
+            _claimsFactory = claimsFactory;
         }
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace InstituteManagement.API.Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto model)
         {
-            // Run FluentValidation
+            // 1 Run FluentValidation
             ValidationResult validationResult = await _validator.ValidateAsync(model);
             if (!validationResult.IsValid)
             {
@@ -50,7 +53,7 @@ namespace InstituteManagement.API.Controllers
                 return ValidationProblem(modelState);
             }
 
-            // CAPTCHA verification (allow dev bypass)
+            // 2️ CAPTCHA verification (allow dev bypass)
             if (model.RecaptchaToken != "dev-mode")
             {
                 var captchaOk = await _captchaValidator.IsCaptchaValid(model.RecaptchaToken, "submit");
@@ -59,35 +62,51 @@ namespace InstituteManagement.API.Controllers
                                            MessageKeys.Auth.Keys.RecaptchaTokenRequired.Get(model.Language));
             }
 
-            // locate user by username or email
+            // 3️ Locate user by username or email
             var user = await _userManager.FindByNameAsync(model.UsernameOrEmail)
                        ?? await _userManager.FindByEmailAsync(model.UsernameOrEmail);
 
             if (user == null)
                 return Unauthorized(new { Message = MessageKeys.Auth.Keys.InvalidCredentials.Get(model.Language) });
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-            if (!result.Succeeded)
+            // 4️ Verify password
+            var passwordOk = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!passwordOk)
                 return Unauthorized(new { Message = MessageKeys.Auth.Keys.InvalidCredentials.Get(model.Language) });
 
-            // sign-in succeeded - return lightweight user info
-            // attempt to resolve a FullName claim if available
-            var claims = await _userManager.GetClaimsAsync(user);
-            var fullName = claims.FirstOrDefault(c => c.Type == "FullName")?.Value
-                           ?? user.FullName
-                           ?? claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value                           
-                           ?? user.UserName;
+            // 5️ Generate ClaimsPrincipal including custom claims
+            var principal = await _claimsFactory.CreateAsync(user);
 
+            // 6️ Sign in with the principal
+            await _signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+
+            // 7️ Extract claims to send lightweight user info back to client
+            var fullName = principal.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value
+                           ?? user.FullName
+                           ?? principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var profilePictureUrl = principal.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value
+                                    ?? "/images/profiles/profile-pics/default-icon.jpg";
+
+            var firstName = principal.Claims.FirstOrDefault(c => c.Type == "FirstName")?.Value ?? "";
+            var lastName = principal.Claims.FirstOrDefault(c => c.Type == "LastName")?.Value ?? "";
+            var lastUsedProfileId = principal.Claims.FirstOrDefault(c => c.Type == "LastUsedProfileId")?.Value ?? "";
+
+            // 8️ Return response to Blazor
             return Ok(new
             {
                 Message = MessageKeys.Auth.Keys.SignInSuccess.Get(model.Language),
                 user.Id,
                 Username = user.UserName,
                 user.Email,
-                FullName = fullName
+                FullName = fullName,
+                ProfilePictureUrl = profilePictureUrl,
+                FirstName = firstName,
+                LastName = lastName,
+                LastUsedProfileId = lastUsedProfileId
             });
         }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
@@ -98,26 +117,46 @@ namespace InstituteManagement.API.Controllers
 
         // Called by Blazor to check current browser's auth cookie
         [HttpGet("whoami")]
-        public async Task<IActionResult> WhoAmI()
+        public IActionResult WhoAmI()
         {
             if (User?.Identity?.IsAuthenticated ?? false)
             {
-                //// try to resolve full name from claims
-                //AppUser? currentUser = await _userManager.GetUserAsync(User);
-                IList<Claim> claims = User.Claims.ToList();
-                var fullName = claims.FirstOrDefault(c => c.Type == "FullName")?.Value
-                               //?? currentUser.FullName
-                               ?? claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var claims = User.Claims.ToList();
+
+                // Extract the claims we want
+                string fullName = claims.FirstOrDefault(c => c.Type == "FullName")?.Value
+                                  ?? claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
+                                  ?? string.Empty;
+
+                string firstName = claims.FirstOrDefault(c => c.Type == "FirstName")?.Value ?? string.Empty;
+                string lastName = claims.FirstOrDefault(c => c.Type == "LastName")?.Value ?? string.Empty;
+                string profilePictureUrl = claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value
+                                           ?? "/images/profiles/profile-pics/default-icon.jpg";
+                string lastUsedProfileId = claims.FirstOrDefault(c => c.Type == "LastUsedProfileId")?.Value ?? string.Empty;
 
                 return Ok(new
                 {
                     IsAuthenticated = true,
                     Username = User.Identity!.Name,
-                    FullName = fullName ?? string.Empty
+                    FullName = fullName,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    ProfilePictureUrl = profilePictureUrl,
+                    LastUsedProfileId = lastUsedProfileId
                 });
             }
 
-            return Ok(new { IsAuthenticated = false, Username = string.Empty, FullName = string.Empty });
+            return Ok(new
+            {
+                IsAuthenticated = false,
+                Username = string.Empty,
+                FullName = string.Empty,
+                FirstName = string.Empty,
+                LastName = string.Empty,
+                ProfilePictureUrl = "/images/profiles/profile-pics/default-icon.jpg",
+                LastUsedProfileId = string.Empty
+            });
         }
+
     }
 }

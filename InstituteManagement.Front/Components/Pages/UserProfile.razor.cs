@@ -6,6 +6,8 @@ using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
 using System.Text.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace InstituteManagement.Front.Components.Pages;
 
@@ -14,6 +16,7 @@ public partial class UserProfile
     [Inject] private IJSRuntime JS { get; set; } = default!;
     [Inject] private NavigationManager Nav { get; set; } = default!;
     [Inject] private UiLocalizer L { get; set; } = default!;
+    [Inject] private HttpClient Http { get; set; }
 
     private PersonDto? person;
     private UpdateAccountDto account = new();
@@ -35,7 +38,7 @@ public partial class UserProfile
     // 🔹 EditContexts for forms
     private EditContext? accountEditContext;
     private EditContext? profileEditContext;
-
+    private string? ProfilePicUrl;   
     protected override async Task OnInitializedAsync()
     {
         accountEditContext = new EditContext(account);
@@ -61,6 +64,48 @@ public partial class UserProfile
         await LoadProfileAsync();
         await LoadAccountAsync();
     }
+    private async Task UploadProfilePic(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        using var stream = file.OpenReadStream(5 * 1024 * 1024); // 5 MB limit
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+
+        // Build JS FormData with file blob
+        var dotNetStream = new DotNetStreamReference(new MemoryStream(bytes));
+        await JS.InvokeVoidAsync("eval", @"
+        window.__buildProfileFormData = async (streamRef, fileName) => {
+            const arrayBuffer = await streamRef.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const formData = new FormData();
+            formData.append('file', blob, fileName); // 👈 must match API parameter name
+            return formData;
+        };
+    ");
+
+        var formData = await JS.InvokeAsync<IJSObjectReference>(
+            "__buildProfileFormData", dotNetStream, file.Name);
+
+        var result = await JS.InvokeAsync<JsonElement>(
+            "appAuth.postForm",
+            "/api/UserProfile/upload-profile-pic",
+            formData
+        );
+
+        if (result.TryGetProperty("ok", out var okProp) && okProp.GetBoolean())
+        {
+            var url = result.GetProperty("body").GetString();
+            ProfilePicUrl = url; // update local property
+            StateHasChanged();
+        }
+        else
+        {
+            // handle error (log, show toast, etc.)
+        }
+    }
+
+
 
     private async Task LoadProfileAsync()
     {

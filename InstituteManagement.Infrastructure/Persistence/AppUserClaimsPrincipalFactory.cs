@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
@@ -7,19 +9,32 @@ namespace InstituteManagement.Infrastructure.Persistence
     public class AppUserClaimsPrincipalFactory
         : UserClaimsPrincipalFactory<AppUser, AppRole>
     {
+        private readonly IServiceProvider _serviceProvider;
+
         public AppUserClaimsPrincipalFactory(
             UserManager<AppUser> userManager,
             RoleManager<AppRole> roleManager,
-            IOptions<IdentityOptions> optionsAccessor)
+            IOptions<IdentityOptions> optionsAccessor,
+            IServiceProvider serviceProvider)
             : base(userManager, roleManager, optionsAccessor)
         {
+            _serviceProvider = serviceProvider;
         }
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(AppUser user)
         {
+            // make sure 'Person' is loaded
+            if (user.Person == null)
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                user.Person = await db.People
+                    .FirstOrDefaultAsync(p => p.AppUserId == user.Id);
+            }
+
             var identity = await base.GenerateClaimsAsync(user);
 
-            // custom claims from Person navigation (check for null)
+            // custom claims
             identity.AddClaim(new Claim("FullName",
                 !string.IsNullOrWhiteSpace(user.FullName)
                     ? user.FullName
@@ -42,5 +57,6 @@ namespace InstituteManagement.Infrastructure.Persistence
 
             return identity;
         }
+
     }
 }

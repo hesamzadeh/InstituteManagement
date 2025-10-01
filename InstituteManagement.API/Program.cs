@@ -127,4 +127,6 @@ app.UseMiddleware<CurrentUserMiddleware>();
 
 app.MapControllers();
 
+app.UseStaticFiles();
+
 app.Run();
