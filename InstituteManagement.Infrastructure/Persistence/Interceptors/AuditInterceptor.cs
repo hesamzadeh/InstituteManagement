@@ -46,7 +46,7 @@ namespace InstituteManagement.Infrastructure.Persistence.Interceptors
 
                             // Skip noise
                             if (prop.Metadata.Name is nameof(BaseEntity.LastModificationDate) or nameof(BaseEntity.Version)
-                                or "ConcurrencyStamp" or "SecurityStamp" or "PasswordHash")
+                                or "ConcurrencyStamp" or "SecurityStamp")
                                 continue;
 
                             auditLogs.Add(new AuditLog
