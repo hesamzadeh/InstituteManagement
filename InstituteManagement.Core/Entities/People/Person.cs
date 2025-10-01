@@ -1,9 +1,8 @@
-﻿using InstituteManagement.Core.Common;
-using InstituteManagement.Core.Common.ValueObjects;
+﻿using InstituteManagement.Core.Common.ValueObjects;
 using InstituteManagement.Core.Entities.Profiles;
 using System.ComponentModel.DataAnnotations;
 
-namespace InstituteManagement.Core.Entities
+namespace InstituteManagement.Core.Entities.People
 {
     public class Person : BaseEntity
     {

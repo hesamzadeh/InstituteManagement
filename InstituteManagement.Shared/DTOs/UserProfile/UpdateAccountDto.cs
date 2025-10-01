@@ -9,5 +9,6 @@ namespace InstituteManagement.Shared.DTOs.UserProfile
         public string? NewPassword { get; set; }
         public string RecaptchaToken { get; set; } = string.Empty;
         public string? Language { get; set; }
+        public string? UserName { get; set; }
     }
 }

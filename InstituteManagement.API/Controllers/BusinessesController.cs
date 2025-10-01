@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using InstituteManagement.Infrastructure;
+using InstituteManagement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

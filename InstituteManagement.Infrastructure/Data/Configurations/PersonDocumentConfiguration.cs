@@ -1,4 +1,4 @@
-﻿using InstituteManagement.Core.Entities;
+﻿using InstituteManagement.Core.Entities.People;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -2,9 +2,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore; // <== Required for AddFluentValidationAutoValidation()
 using InstituteManagement.API.Mappings;
 using InstituteManagement.API.Services;
+using InstituteManagement.API.Services.InstituteManagement.API.Services;
 using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Application.Validators.Auth;
-using InstituteManagement.Infrastructure;
+using InstituteManagement.Infrastructure.Persistence;
+using InstituteManagement.Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,10 @@ builder.Services.AddIdentity<AppUser, AppRole>(options => {
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPrincipalFactory>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<AuditInterceptor>();
 
 // FluentValidation integration
 builder.Services
@@ -116,6 +122,8 @@ app.UseRequestLocalization(); // Accept-Language support
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<CurrentUserMiddleware>();
 
 app.MapControllers();
 

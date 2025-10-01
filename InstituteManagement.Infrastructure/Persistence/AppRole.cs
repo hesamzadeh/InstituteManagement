@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace InstituteManagement.Infrastructure
+namespace InstituteManagement.Infrastructure.Persistence
 {
     public class AppRole : IdentityRole<Guid>
     {

@@ -1,8 +1,8 @@
-﻿using InstituteManagement.Core.Entities;
+﻿using InstituteManagement.Core.Entities.People;
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace InstituteManagement.Infrastructure
+namespace InstituteManagement.Infrastructure.Persistence
 {
     public class AppUser : IdentityUser<Guid>
     {

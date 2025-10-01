@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace InstituteManagement.Infrastructure
+namespace InstituteManagement.Infrastructure.Persistence
 {
     public class AppUserClaimsPrincipalFactory
         : UserClaimsPrincipalFactory<AppUser, AppRole>

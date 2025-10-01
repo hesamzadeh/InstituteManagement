@@ -210,4 +210,7 @@
   <data name="RequestValidation" xml:space="preserve">
     <value>Request Validation</value>
   </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Username</value>
+  </data>
 </root>

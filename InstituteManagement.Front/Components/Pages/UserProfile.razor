@@ -25,99 +25,115 @@ else if (person == null)
 }
 else
 {
-
     <!-- 🔹 Personal Profile -->
     <div class="card shadow-sm p-4">
         <div class="d-flex align-items-center mb-4">
             <img src="@(!string.IsNullOrEmpty(person.ProfilePictureUrl)
-                                          ? person.ProfilePictureUrl
-                                          : "/images/profiles/profile-pics/default-icon.jpg")"
+                                                           ? person.ProfilePictureUrl
+                                                           : "/images/profiles/profile-pics/default-icon.jpg")"
              class="rounded-circle me-3"
              style="width:100px; height:100px; object-fit:cover;" />
         <div>
             <h4>@person.FirstName @person.LastName</h4>
             <p class="text-muted mb-0">@person.NationalityCode</p>
             <p class="text-muted mb-0">@L["NationalId"]: @person.NationalId</p>
+            <p class="text-muted mb-0">@L["UserName"]: @account.UserName</p>
         </div>
     </div>
 
         <hr />
 
         <!-- 🔹 Account Settings -->
-            <h4>@L["AccountInfo"]</h4>
+        <h4>@L["AccountInfo"]</h4>
 
-        @if (accountEditMode)
-            {
-                <EditForm Model="@account" OnValidSubmit="@SaveAccountAsync">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-
-                    <div class="mb-3">
-                        <label class="form-label">@L["Email"]</label>
-                        <InputText class="form-control" @bind-Value="account.Email" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@L["PhoneNumber"]</label>
-                        <InputText class="form-control" @bind-Value="account.PhoneNumber" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@L["OldPassword"]</label>
-                        <InputText type="password" class="form-control" @bind-Value="account.CurrentPassword" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@L["NewPassword"]</label>
-                        <InputText type="password" class="form-control" @bind-Value="account.NewPassword" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">@L["ConfirmPassword"]</label>
-                        <InputText type="password" class="form-control" @bind-Value="confirmPassword" />
-                        @if (!string.IsNullOrEmpty(confirmPasswordError))
-                        {
-                            <div class="text-danger">@confirmPasswordError</div>
-                        }
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">@L["Save"]</button>
-                    <button type="button" class="btn btn-secondary ms-2" @onclick="() => accountEditMode = false">@L["Cancel"]</button>
-                </EditForm>
-            }
-            else
-            {            
-                <dl class="row">
-                    <dt class="col-sm-3">@L["Email"]</dt>
-                    <dd class="col-sm-9">@account.Email</dd>
-
-                    <dt class="col-sm-3">@L["PhoneNumber"]</dt>
-                    <dd class="col-sm-9">@account.PhoneNumber</dd>
-                </dl>
-
-                <button class="btn btn-outline-primary" @onclick="() => accountEditMode = true">@L["EditAccount"]</button>
-            }
-        <hr />
-        <h4>@L["PersonalInfo"]</h4>
-    @if (editMode)
+    @if (accountEditMode)
         {
-            <EditForm Model="@person" OnValidSubmit="@SaveProfileAsync">
-                <DataAnnotationsValidator />
+            <EditForm EditContext="@accountEditContext" OnValidSubmit="@SaveAccountAsync">
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">@L["Email"]</label>
+                    <InputText class="form-control" @bind-Value="account.Email" />
+                    <ValidationMessage For="@(() => account.Email)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["PhoneNumber"]</label>
+                    <InputText class="form-control" @bind-Value="account.PhoneNumber" />
+                    <ValidationMessage For="@(() => account.PhoneNumber)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["OldPassword"]</label>
+                    <InputText type="password" class="form-control" @bind-Value="account.CurrentPassword" />
+                    <ValidationMessage For="@(() => account.CurrentPassword)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["NewPassword"]</label>
+                    <InputText type="password" class="form-control" @bind-Value="account.NewPassword" />
+                    <ValidationMessage For="@(() => account.NewPassword)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L["ConfirmPassword"]</label>
+                    <InputText type="password" class="form-control" @bind-Value="confirmPassword" />
+                    @if (!string.IsNullOrEmpty(confirmPasswordError))
+                    {
+                        <div class="text-danger">@confirmPasswordError</div>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(responseMessageKey))
+                {
+                    <div class="alert alert-danger mt-2">@L[responseMessageKey]</div>
+                }
+                else if (!string.IsNullOrEmpty(rawResponseMessage))
+                {
+                    <div class="alert alert-danger mt-2">@rawResponseMessage</div>
+                }
+
+                <button type="submit" class="btn btn-primary">@L["Save"]</button>
+                <button type="button" class="btn btn-secondary ms-2" @onclick="() => accountEditMode = false">@L["Cancel"]</button>
+            </EditForm>
+        }
+        else
+        {
+            <dl class="row">
+                <dt class="col-sm-3">@L["Email"]</dt>
+                <dd class="col-sm-9">@account.Email</dd>
+
+                <dt class="col-sm-3">@L["PhoneNumber"]</dt>
+                <dd class="col-sm-9">@account.PhoneNumber</dd>
+            </dl>
+
+            <button class="btn btn-outline-primary" @onclick="() => accountEditMode = true">@L["EditAccount"]</button>
+        }
+
+        <hr />
+
+        <h4>@L["PersonalInfo"]</h4>
+        @if (editMode)
+        {
+            <EditForm EditContext="@profileEditContext" OnValidSubmit="@SaveProfileAsync">
                 <ValidationSummary />
 
                 <div class="mb-3">
                     <label class="form-label">@L["FirstName"]</label>
                     <InputText class="form-control" @bind-Value="person.FirstName" />
+                    <ValidationMessage For="@(() => person.FirstName)" />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">@L["LastName"]</label>
                     <InputText class="form-control" @bind-Value="person.LastName" />
+                    <ValidationMessage For="@(() => person.LastName)" />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">@L["Birthday"]</label>
                     <InputDate class="form-control" @bind-Value="person.Birthday" />
+                    <ValidationMessage For="@(() => person.Birthday)" />
                 </div>
 
                 <div class="mb-3">
@@ -144,6 +160,15 @@ else
                     <label class="form-label">@L["PostalCode"]</label>
                     <InputText class="form-control" @bind-Value="person.PostalCode" />
                 </div>
+
+                @if (!string.IsNullOrEmpty(responseMessageKey))
+                {
+                    <div class="alert alert-danger mt-2">@L[responseMessageKey]</div>
+                }
+                else if (!string.IsNullOrEmpty(rawResponseMessage))
+                {
+                    <div class="alert alert-danger mt-2">@rawResponseMessage</div>
+                }
 
                 <button type="submit" class="btn btn-primary">@L["Save"]</button>
                 <button type="button" class="btn btn-secondary ms-2" @onclick="() => editMode = false">@L["Cancel"]</button>

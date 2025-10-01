@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InstituteManagement.Core.Common
+namespace InstituteManagement.Core.Entities
 {
     public abstract class BaseEntity
     {

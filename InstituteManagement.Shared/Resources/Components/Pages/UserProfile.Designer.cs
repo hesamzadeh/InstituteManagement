@@ -331,6 +331,15 @@ namespace InstituteManagement.Shared.Resources.Components.Pages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Verified.
         /// </summary>
         internal static string Verified {

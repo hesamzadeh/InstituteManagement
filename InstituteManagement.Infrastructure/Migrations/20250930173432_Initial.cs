@@ -26,6 +26,24 @@ namespace InstituteManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLogs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EntityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PropertyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OldValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChangedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChangedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "People",
                 columns: table => new
                 {
@@ -53,6 +71,8 @@ namespace InstituteManagement.Infrastructure.Migrations
                     TimeZone = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "UTC"),
                     IsEnabled = table.Column<bool>(type: "bit", nullable: false),
                     IsLocked = table.Column<bool>(type: "bit", nullable: false),
+                    IsVerificationLocked = table.Column<bool>(type: "bit", nullable: false),
+                    VerificationRequestedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     InsertedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Version = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
@@ -89,6 +109,7 @@ namespace InstituteManagement.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -109,6 +130,31 @@ namespace InstituteManagement.Infrastructure.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PersonDocument",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getutcdate()"),
+                    InsertedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Version = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonDocument", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonDocument_People_PersonId",
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -673,6 +719,11 @@ namespace InstituteManagement.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_PersonDocument_PersonId",
+                table: "PersonDocument",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Profile_PersonId",
                 table: "Profile",
                 column: "PersonId");
@@ -697,6 +748,9 @@ namespace InstituteManagement.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AuditLogs");
+
+            migrationBuilder.DropTable(
                 name: "GymProfileGymStudentProfile");
 
             migrationBuilder.DropTable(
@@ -719,6 +773,9 @@ namespace InstituteManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "InstituteProfileInstituteTeacherProfile");
+
+            migrationBuilder.DropTable(
+                name: "PersonDocument");
 
             migrationBuilder.DropTable(
                 name: "PersonPhoneNumbers");

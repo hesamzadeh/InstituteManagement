@@ -1,5 +1,5 @@
 ﻿using InstituteManagement.Core.Common.ValueObjects;
-using InstituteManagement.Core.Entities;
+using InstituteManagement.Core.Entities.People;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

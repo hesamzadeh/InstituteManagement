@@ -1,18 +1,24 @@
 ﻿using InstituteManagement.Application.Common.Interfaces;
 using InstituteManagement.Core.Common.ValueObjects;
-using InstituteManagement.Core.Entities;
+using InstituteManagement.Core.Entities.AuditLogs;
+using InstituteManagement.Core.Entities.People;
 using InstituteManagement.Core.Entities.Profiles;
 using InstituteManagement.Infrastructure.Data.Configurations;
+using InstituteManagement.Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstituteManagement.Infrastructure
+namespace InstituteManagement.Infrastructure.Persistence
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>, IAppDbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
+        private readonly AuditInterceptor _auditInterceptor;
+        public AppDbContext(DbContextOptions<AppDbContext> options, AuditInterceptor auditInterceptor)
+      : base(options)
+        {
+            _auditInterceptor = auditInterceptor;
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -41,7 +47,13 @@ namespace InstituteManagement.Infrastructure
             // If you have common config logic across profiles, apply it here too
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_auditInterceptor);
+        }
+
         // Add DbSet properties only for the concrete types you will query directly
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
         public DbSet<Person> People => Set<Person>();
         public DbSet<AppRole> AppRoles => Set<AppRole>();
         public DbSet<GymProfile> GymProfiles => Set<GymProfile>();

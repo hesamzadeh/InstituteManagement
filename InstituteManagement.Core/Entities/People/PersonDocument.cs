@@ -1,7 +1,6 @@
-﻿using InstituteManagement.Core.Common;
-using InstituteManagement.Shared.Enums;
+﻿using InstituteManagement.Shared.Enums;
 
-namespace InstituteManagement.Core.Entities
+namespace InstituteManagement.Core.Entities.People
 {
     public class PersonDocument : BaseEntity
     {

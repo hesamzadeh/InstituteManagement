@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using InstituteManagement.API.Services;
-using InstituteManagement.Infrastructure;
+using InstituteManagement.Infrastructure.Persistence;
 using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.Auth;
 using Microsoft.AspNetCore.Identity;

@@ -1,10 +1,11 @@
 ﻿using InstituteManagement.Shared;
 using InstituteManagement.Shared.DTOs.UserProfile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
-using System.Text.Json;
 using System.Globalization;
+using System.Text.Json;
 
 namespace InstituteManagement.Front.Components.Pages;
 
@@ -16,19 +17,49 @@ public partial class UserProfile
 
     private PersonDto? person;
     private UpdateAccountDto account = new();
-    private string? confirmPassword; // client-side only
+    private string? confirmPassword;
+
     private bool loading = true;
     private bool isAuthenticated = false;
     private string? loadError;
     private bool editMode = false;
     private bool accountEditMode = false;
 
-    private string? confirmPasswordError;      // error message if passwords don't match
+    private string? confirmPasswordError;
+
+    // 🔹 Error handling like SignIn
+    private string? responseMessageKey;
+    private string? rawResponseMessage;
+    private ValidationMessageStore? messageStore;
+
+    // 🔹 EditContexts for forms
+    private EditContext? accountEditContext;
+    private EditContext? profileEditContext;
 
     protected override async Task OnInitializedAsync()
     {
+        accountEditContext = new EditContext(account);
+        profileEditContext = new EditContext(person ?? new PersonDto());
+        messageStore = new ValidationMessageStore(accountEditContext);
+
+        accountEditContext.OnFieldChanged += (_, args) =>
+        {
+            messageStore?.Clear(args.FieldIdentifier);
+            responseMessageKey = null;
+            rawResponseMessage = null;
+            confirmPasswordError = null;
+            InvokeAsync(StateHasChanged);
+        };
+
+        profileEditContext.OnFieldChanged += (_, args) =>
+        {
+            responseMessageKey = null;
+            rawResponseMessage = null;
+            InvokeAsync(StateHasChanged);
+        };
+
         await LoadProfileAsync();
-        await LoadAccountAsync(); // ensure email & phone load
+        await LoadAccountAsync();
     }
 
     private async Task LoadProfileAsync()
@@ -53,10 +84,9 @@ public partial class UserProfile
 
             if (result.TryGetProperty("body", out var bodyEl) && bodyEl.ValueKind == JsonValueKind.Object)
             {
-                person = JsonSerializer.Deserialize<PersonDto>(
-                    bodyEl.GetRawText(),
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                );
+                person = JsonSerializer.Deserialize<PersonDto>(bodyEl.GetRawText(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                profileEditContext = new EditContext(person!);
                 isAuthenticated = true;
             }
             else
@@ -64,11 +94,7 @@ public partial class UserProfile
                 loadError = L["InvalidResponse"];
             }
         }
-        catch (JSException jsEx)
-        {
-            loadError = L["ClientError"];
-        }
-        catch (Exception ex)
+        catch
         {
             loadError = L["UnexpectedError"];
         }
@@ -83,17 +109,16 @@ public partial class UserProfile
         try
         {
             var result = await JS.InvokeAsync<JsonElement>("appAuth.get", "/api/UserProfile/account");
-
             if (result.TryGetProperty("ok", out var okEl) && okEl.GetBoolean()
                 && result.TryGetProperty("body", out var bodyEl) && bodyEl.ValueKind == JsonValueKind.Object)
             {
-                account = JsonSerializer.Deserialize<UpdateAccountDto>(
-                    bodyEl.GetRawText(),
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                ) ?? new UpdateAccountDto();
+                account = JsonSerializer.Deserialize<UpdateAccountDto>(bodyEl.GetRawText(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new UpdateAccountDto();
+                accountEditContext = new EditContext(account);
+                messageStore = new ValidationMessageStore(accountEditContext);
             }
         }
-        catch (Exception ex)
+        catch
         {
             loadError = L["FailedToLoadAccount"];
         }
@@ -101,7 +126,10 @@ public partial class UserProfile
 
     private async Task SaveAccountAsync()
     {
-        // Client-side confirm password validation
+        responseMessageKey = null;
+        rawResponseMessage = null;
+        messageStore?.Clear();
+
         if (!string.IsNullOrWhiteSpace(account.NewPassword) &&
             account.NewPassword != confirmPassword)
         {
@@ -110,19 +138,17 @@ public partial class UserProfile
         }
         else
         {
-            confirmPasswordError = null; // clear previous error
+            confirmPasswordError = null;
         }
 
-        // Require current password
         if (string.IsNullOrWhiteSpace(account.CurrentPassword))
         {
-            loadError = L["CurrentPasswordRequired"];
+            responseMessageKey = "CurrentPasswordRequired";
             return;
         }
 
         try
         {
-            // request reCAPTCHA token
             string token;
             try
             {
@@ -130,19 +156,17 @@ public partial class UserProfile
             }
             catch
             {
-                loadError = L["RecaptchaUnavailable"];
+                responseMessageKey = "RecaptchaUnavailable";
                 return;
             }
 
-            // include recaptcha + culture info
             account.RecaptchaToken = token;
             account.Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
             var result = await JS.InvokeAsync<JsonElement>("appAuth.put", "/api/UserProfile/account", account);
-            bool ok = result.TryGetProperty("ok", out var okEl) && okEl.GetBoolean();
-            if (!ok)
+            if (!result.TryGetProperty("ok", out var okEl) || !okEl.GetBoolean())
             {
-                loadError = result.TryGetProperty("body", out var body) ? body.ToString() : L["SaveFailed"];
+                HandleServerErrors(result, accountEditContext);
                 return;
             }
 
@@ -150,30 +174,32 @@ public partial class UserProfile
             confirmPassword = null;
             await LoadAccountAsync();
         }
-        catch (Exception ex)
+        catch
         {
-            loadError = L["SaveError"];
+            responseMessageKey = "SaveError";
         }
     }
 
     private async Task SaveProfileAsync()
     {
+        responseMessageKey = null;
+        rawResponseMessage = null;
+
         try
         {
             var result = await JS.InvokeAsync<JsonElement>("appAuth.put", "/api/UserProfile/me", person);
-            bool ok = result.TryGetProperty("ok", out var okEl) && okEl.GetBoolean();
-            if (!ok)
+            if (!result.TryGetProperty("ok", out var okEl) || !okEl.GetBoolean())
             {
-                loadError = result.TryGetProperty("body", out var body) ? body.ToString() : L["SaveFailed"];
+                HandleServerErrors(result, profileEditContext);
                 return;
             }
 
             editMode = false;
             await LoadProfileAsync();
         }
-        catch (Exception ex)
+        catch
         {
-            loadError = L["SaveError"];
+            responseMessageKey = "SaveError";
         }
     }
 
@@ -182,18 +208,56 @@ public partial class UserProfile
         try
         {
             var result = await JS.InvokeAsync<JsonElement>("appAuth.post", "/api/UserProfile/request-validation", null);
-            bool ok = result.TryGetProperty("ok", out var okEl) && okEl.GetBoolean();
-            if (!ok)
+            if (!result.TryGetProperty("ok", out var okEl) || !okEl.GetBoolean())
             {
-                loadError = result.TryGetProperty("body", out var body) ? body.ToString() : L["ValidationRequestFailed"];
+                HandleServerErrors(result, profileEditContext);
                 return;
             }
 
             await LoadProfileAsync();
         }
-        catch (Exception ex)
+        catch
         {
-            loadError = L["ValidationRequestError"];
+            responseMessageKey = "ValidationRequestError";
+        }
+    }
+
+    private void HandleServerErrors(JsonElement result, EditContext? ctx)
+    {
+        try
+        {
+            if (result.TryGetProperty("body", out var body))
+            {
+                if (body.ValueKind == JsonValueKind.Object && body.TryGetProperty("errors", out var errors))
+                {
+                    foreach (var prop in errors.EnumerateObject())
+                    {
+                        var fieldName = prop.Name;
+                        var messages = prop.Value.EnumerateArray()
+                            .Select(x => x.GetString())
+                            .Where(s => s != null!)
+                            .ToArray();
+
+                        if (messages.Length > 0 && ctx != null)
+                            messageStore?.Add(ctx.Field(fieldName), messages);
+                    }
+                    ctx?.NotifyValidationStateChanged();
+                    return;
+                }
+
+                if (body.ValueKind == JsonValueKind.String)
+                    rawResponseMessage = body.GetString();
+                else
+                    rawResponseMessage = body.ToString();
+            }
+            else
+            {
+                responseMessageKey = "SaveFailed";
+            }
+        }
+        catch
+        {
+            responseMessageKey = "SaveFailed";
         }
     }
 }

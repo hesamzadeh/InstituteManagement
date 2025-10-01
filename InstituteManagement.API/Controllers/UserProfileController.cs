@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using InstituteManagement.API.Services;
-using InstituteManagement.Infrastructure;
+using InstituteManagement.Infrastructure.Persistence;
 using InstituteManagement.Shared.DTOs.Signup;
 using InstituteManagement.Shared.DTOs.UserProfile;
 using Microsoft.AspNetCore.Authorization;
@@ -142,7 +142,8 @@ namespace InstituteManagement.API.Controllers
             var dto = new UpdateAccountDto
             {
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                UserName = user.UserName
             };
 
             return Ok(dto);

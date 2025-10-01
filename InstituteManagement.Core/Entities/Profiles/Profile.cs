@@ -1,4 +1,4 @@
-﻿using InstituteManagement.Core.Common;
+﻿using InstituteManagement.Core.Entities.People;
 using InstituteManagement.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
