@@ -33,12 +33,8 @@ namespace InstituteManagement.Infrastructure.Persistence
             }
 
             var identity = await base.GenerateClaimsAsync(user);
-
+            
             // custom claims
-            identity.AddClaim(new Claim("FullName",
-                !string.IsNullOrWhiteSpace(user.FullName)
-                    ? user.FullName
-                    : user.UserName ?? string.Empty));
 
             if (user.Person != null)
             {

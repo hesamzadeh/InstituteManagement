@@ -1,13 +1,10 @@
 ﻿using InstituteManagement.Shared;
-using InstituteManagement.Shared.DTOs.UserProfile;
+using InstituteManagement.Shared.DTOs.Profiles.UserProfile;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.Globalization;
 using System.Text.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace InstituteManagement.Front.Components.Pages;
 

@@ -75,3 +75,13 @@
 .sidebar-footer {
     padding-top: 1rem;
 }
+
+html[dir="rtl"] .profile-hover {
+    right: auto !important;
+    left: 0 !important;
+}
+
+html[dir="rtl"] .profile-sidebar {
+    right: auto !important;
+    left: 0 !important;
+}

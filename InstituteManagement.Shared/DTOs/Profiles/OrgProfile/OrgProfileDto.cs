@@ -1,11 +1,21 @@
 ﻿using InstituteManagement.Shared.ValueObjects;
 
-namespace InstituteManagement.Core.Entities.Profiles
+namespace InstituteManagement.Shared.DTOs.Profiles.OrgProfile
 {
-    public abstract class OrgProfile : Profile
+    public class OrgProfileDto
     {
+        // From Profile
+        public Guid Id { get; set; }                  // from BaseEntity
+        public string? DisplayName { get; set; }
+        public string? NationalCode { get; set; }
+        public string? Bio { get; set; }
+        public bool IsVerified { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime LastLogin { get; set; }
+        public DateTime? VerifiedAt { get; set; }
+
+        // From OrgProfile
         public Guid? OwnerOrgProfileId { get; set; }
-        public OrgProfile? OwnerOrgProfile { get; set; }
         public string? OfficialName { get; set; }
         public string? Website { get; set; }
         public string? LogoUrl { get; set; }
@@ -15,7 +25,9 @@ namespace InstituteManagement.Core.Entities.Profiles
         public List<Address> Addresses { get; set; } = [];
         public string? Description { get; set; }
         public string? ProfileCoverPhotoUrl { get; set; }
-        public string? CustomContentHtml { get; set; }   // editable by business owner
+        public string? CustomContentHtml { get; set; }
+
+        // Only admins should see/edit this
         public string? CustomCss { get; set; }
     }
 }

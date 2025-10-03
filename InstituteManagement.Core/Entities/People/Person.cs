@@ -1,5 +1,5 @@
-﻿using InstituteManagement.Core.Common.ValueObjects;
-using InstituteManagement.Core.Entities.Profiles;
+﻿using InstituteManagement.Core.Entities.Profiles;
+using InstituteManagement.Shared.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 
 namespace InstituteManagement.Core.Entities.People

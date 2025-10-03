@@ -1,6 +1,7 @@
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Vazir', Tahoma, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 
 a, .btn-link {
     color: #006bb7;
@@ -57,4 +58,15 @@ h1:focus {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+html[dir="rtl"] .dropdown-menu.dropdown-menu-end {
+    right: auto !important;
+    left: 0 !important;
+    transform-origin: top left !important;
+}
+
+html[dir="rtl"] .navbar-nav {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: right;
 }

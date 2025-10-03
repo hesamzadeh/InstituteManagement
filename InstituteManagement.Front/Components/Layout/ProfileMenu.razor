@@ -45,8 +45,8 @@
         <div class="sidebar-header d-flex align-items-center">
             <img src="@ProfilePictureOrPlaceholder" class="rounded-circle profile-avatar-lg me-2" />
             <div>
-                <div class="fw-bold">@UserName</div>
-                <div class="text-muted small">@FullName</div>
+                <div class="fw-bold">@FullName</div>
+                <div class="text-muted small">@UserName</div>
             </div>
             <button class="btn btn-sm btn-close ms-auto" @onclick="CloseSidebar" title="@L["Close"]"></button>
         </div>
@@ -56,7 +56,7 @@
         <div class="sidebar-links">
             <a class="sidebar-link" href="/profile">
                 <i class="bi bi-person"></i>
-                <span>@L["MyProfile"]</span>
+                <span>@L["UserAccount"]</span>
             </a>
 
             @if (IsAuthenticated)

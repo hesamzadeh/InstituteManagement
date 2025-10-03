@@ -129,4 +129,10 @@
   <data name="Login" xml:space="preserve">
     <value>ورود</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>درباره ما</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>تماس با ما</value>
+  </data>
 </root>

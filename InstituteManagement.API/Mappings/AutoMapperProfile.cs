@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using InstituteManagement.Core.Common.ValueObjects;
 using InstituteManagement.Core.Entities.People;
+using InstituteManagement.Shared.DTOs.Profiles.UserProfile;
 using InstituteManagement.Shared.DTOs.Signup;
-using InstituteManagement.Shared.DTOs.UserProfile;
+using InstituteManagement.Shared.ValueObjects;
 
 namespace InstituteManagement.API.Mappings
 {

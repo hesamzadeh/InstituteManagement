@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using InstituteManagement.Shared.DTOs.UserProfile;
+using InstituteManagement.Shared.DTOs.Profiles.UserProfile;
 
 namespace InstituteManagement.Application.Validators.UserProfile
 {

@@ -61,11 +61,29 @@ namespace InstituteManagement.Shared.Resources.Components.Layout {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About us.
+        /// </summary>
+        internal static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Management App.
         /// </summary>
         internal static string AppName {
             get {
                 return ResourceManager.GetString("AppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact us.
+        /// </summary>
+        internal static string Contact {
+            get {
+                return ResourceManager.GetString("Contact", resourceCulture);
             }
         }
         
@@ -81,9 +99,9 @@ namespace InstituteManagement.Shared.Resources.Components.Layout {
         /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
-        internal static string SignIn {
+        internal static string Login {
             get {
-                return ResourceManager.GetString("SignIn", resourceCulture);
+                return ResourceManager.GetString("Login", resourceCulture);
             }
         }
         

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InstituteManagement.Shared.DTOs.UserProfile
+namespace InstituteManagement.Shared.DTOs.Profiles.UserProfile
 {
     public class UpdatePersonDto
     {

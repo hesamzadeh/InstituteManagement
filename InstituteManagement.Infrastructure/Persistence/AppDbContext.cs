@@ -1,10 +1,10 @@
 ﻿using InstituteManagement.Application.Common.Interfaces;
-using InstituteManagement.Core.Common.ValueObjects;
 using InstituteManagement.Core.Entities.AuditLogs;
 using InstituteManagement.Core.Entities.People;
 using InstituteManagement.Core.Entities.Profiles;
 using InstituteManagement.Infrastructure.Data.Configurations;
 using InstituteManagement.Infrastructure.Persistence.Interceptors;
+using InstituteManagement.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

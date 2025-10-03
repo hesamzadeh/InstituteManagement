@@ -123,7 +123,6 @@ namespace InstituteManagement.API.Controllers
                 Email = dto.Email,
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
-                FullName = person.FirstName + " " + person.LastName,
                 Person = person
             };
 

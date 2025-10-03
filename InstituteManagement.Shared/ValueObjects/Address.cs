@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InstituteManagement.Core.Common.ValueObjects
+namespace InstituteManagement.Shared.ValueObjects
 {
     public class Address
     {

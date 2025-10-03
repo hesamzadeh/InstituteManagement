@@ -1,12 +1,12 @@
-﻿using InstituteManagement.Shared.ValueObjects;
+﻿
+using InstituteManagement.Shared.ValueObjects;
 
-namespace InstituteManagement.Core.Entities.Profiles
+namespace InstituteManagement.Shared.DTOs.Profiles.OrgProfile
 {
-    public abstract class OrgProfile : Profile
+    public class OrgProfileUpdateDto
     {
-        public Guid? OwnerOrgProfileId { get; set; }
-        public OrgProfile? OwnerOrgProfile { get; set; }
-        public string? OfficialName { get; set; }
+        public string? DisplayName { get; set; }
+        public string? Bio { get; set; }
         public string? Website { get; set; }
         public string? LogoUrl { get; set; }
         public List<PhoneNumber> Phones { get; set; } = [];
@@ -15,7 +15,9 @@ namespace InstituteManagement.Core.Entities.Profiles
         public List<Address> Addresses { get; set; } = [];
         public string? Description { get; set; }
         public string? ProfileCoverPhotoUrl { get; set; }
-        public string? CustomContentHtml { get; set; }   // editable by business owner
+        public string? CustomContentHtml { get; set; }
+
+        // For admins only
         public string? CustomCss { get; set; }
     }
 }

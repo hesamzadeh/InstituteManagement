@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using InstituteManagement.Shared.DTOs.UserProfile;
 
 namespace InstituteManagement.Application.Validators.UserProfile
 {
     using FluentValidation;
     using global::InstituteManagement.Shared;
+    using global::InstituteManagement.Shared.DTOs.Profiles.UserProfile;
     using static global::InstituteManagement.Shared.MessageKeys;
 
     namespace InstituteManagement.Application.Validators.UserProfile

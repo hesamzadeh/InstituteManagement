@@ -1,6 +1,5 @@
 ﻿@page "/profile"
 @using InstituteManagement.Shared
-@using InstituteManagement.Shared.DTOs.UserProfile
 @using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
 @inject IOptions<ApiSettings> ApiOptions
@@ -113,13 +112,15 @@ else
         }
         else
         {
-            <dl class="row">
-                <dt class="col-sm-3">@L["Email"]</dt>
-                <dd class="col-sm-9">@account.Email</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["Email"]</div>
+                <div class="col-8 col-sm-10">@account.Email</div>
+            </div>
 
-                <dt class="col-sm-3">@L["PhoneNumber"]</dt>
-                <dd class="col-sm-9">@account.PhoneNumber</dd>
-            </dl>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["PhoneNumber"]</div>
+                <div class="col-8 col-sm-10">@account.PhoneNumber</div>
+            </div>
 
             <button class="btn btn-outline-primary" @onclick="() => accountEditMode = true">@L["EditAccount"]</button>
         }
@@ -190,33 +191,49 @@ else
         }
         else
         {
-            <dl class="row">
-                <dt class="col-sm-3">@L["FirstName"]</dt>
-                <dd class="col-sm-9">@person.FirstName</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["FirstName"]</div>
+                <div class="col-8 col-sm-10">@person.FirstName</div>
+            </div>
 
-                <dt class="col-sm-3">@L["LastName"]</dt>
-                <dd class="col-sm-9">@person.LastName</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["LastName"]</div>
+                <div class="col-8 col-sm-10">@person.LastName</div>
+            </div>
 
-                <dt class="col-sm-3">@L["Birthday"]</dt>
-                <dd class="col-sm-9">@person.Birthday?.ToString("yyyy-MM-dd")</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["Birthday"]</div>
+                <div class="col-8 col-sm-10">@person.Birthday?.ToString("yyyy-MM-dd")</div>
+            </div>
 
-                <dt class="col-sm-3">@L["Country"]</dt>
-                <dd class="col-sm-9">@person.Country</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["Country"]</div>
+                <div class="col-8 col-sm-10">@person.Country</div>
+            </div>
 
-                <dt class="col-sm-3">@L["Province"]</dt>
-                <dd class="col-sm-9">@person.Province</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["Province"]</div>
+                <div class="col-8 col-sm-10">@person.Province</div>
+            </div>
 
-                <dt class="col-sm-3">@L["City"]</dt>
-                <dd class="col-sm-9">@person.City</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["City"]</div>
+                <div class="col-8 col-sm-10">@person.City</div>
+            </div>
 
-                <dt class="col-sm-3">@L["FullAddress"]</dt>
-                <dd class="col-sm-9">@person.FullAddress</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["FullAddress"]</div>
+                <div class="col-8 col-sm-10">@person.FullAddress</div>
+            </div>
 
-                <dt class="col-sm-3">@L["PostalCode"]</dt>
-                <dd class="col-sm-9">@person.PostalCode</dd>
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["PostalCode"]</div>
+                <div class="col-8 col-sm-10">@person.PostalCode</div>
+            </div>
 
-                <dt class="col-sm-3">@L["Status"]</dt>
-                <dd class="col-sm-9">
+            <div class="row mb-2">
+                <div class="col-4 col-sm-2 fw-bold">@L["Status"]</div>
+                <div class="col-8 col-sm-10">
                     @if (person.IsVerified)
                     {
                         <span class="badge bg-success">@L["Verified"]</span>
@@ -229,14 +246,15 @@ else
                     {
                         <span class="badge bg-secondary">@L["Draft"]</span>
                     }
-                </dd>
-            </dl>
+                </div>
+            </div>
 
             @if (!person.IsVerified && !person.IsVerificationLocked)
             {
                 <button class="btn btn-outline-primary me-2" @onclick="() => editMode = true">@L["EditProfile"]</button>
                 <button class="btn btn-success" @onclick="RequestValidationAsync">@L["RequestValidation"]</button>
             }
+
         }
     </div>
 }

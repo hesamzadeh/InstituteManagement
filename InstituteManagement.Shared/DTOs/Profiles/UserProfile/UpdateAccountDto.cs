@@ -1,5 +1,4 @@
-﻿
-namespace InstituteManagement.Shared.DTOs.UserProfile
+﻿namespace InstituteManagement.Shared.DTOs.Profiles.UserProfile
 {
     public class UpdateAccountDto
     {

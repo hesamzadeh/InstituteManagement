@@ -81,10 +81,6 @@ namespace InstituteManagement.API.Controllers
             await _signInManager.SignInAsync(user, isPersistent: model.RememberMe);
 
             // 7️ Extract claims to send lightweight user info back to client
-            var fullName = principal.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value
-                           ?? user.FullName
-                           ?? principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
             var profilePictureUrl = principal.Claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value
                                     ?? "/images/profiles/profile-pics/default-icon.jpg";
 
@@ -92,6 +88,8 @@ namespace InstituteManagement.API.Controllers
             var lastName = principal.Claims.FirstOrDefault(c => c.Type == "LastName")?.Value ?? "";
             var lastUsedProfileId = principal.Claims.FirstOrDefault(c => c.Type == "LastUsedProfileId")?.Value ?? "";
 
+            var fullName =  firstName + " " + lastName
+                           ?? principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             // 8️ Return response to Blazor
             return Ok(new
             {
@@ -124,16 +122,14 @@ namespace InstituteManagement.API.Controllers
                 var claims = User.Claims.ToList();
 
                 // Extract the claims we want
-                string fullName = claims.FirstOrDefault(c => c.Type == "FullName")?.Value
-                                  ?? claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
-                                  ?? string.Empty;
 
                 string firstName = claims.FirstOrDefault(c => c.Type == "FirstName")?.Value ?? string.Empty;
                 string lastName = claims.FirstOrDefault(c => c.Type == "LastName")?.Value ?? string.Empty;
                 string profilePictureUrl = claims.FirstOrDefault(c => c.Type == "ProfilePictureUrl")?.Value
                                            ?? "/images/profiles/profile-pics/default-icon.jpg";
                 string lastUsedProfileId = claims.FirstOrDefault(c => c.Type == "LastUsedProfileId")?.Value ?? string.Empty;
-
+                var fullName = firstName + " " + lastName
+                            ?? string.Empty;
                 return Ok(new
                 {
                     IsAuthenticated = true,
